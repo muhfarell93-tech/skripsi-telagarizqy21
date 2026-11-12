@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorium UI/UX &amp; Micro-Interactions - Telaga Rizqy 21</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* =========================================================
+       SPECIFICATION: MICRO-INTERACTIONS DESIGN SYSTEM
+       ========================================================= */
+    :root {
+      --primary-color: #2563eb;
+      --transition-standard: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 1. BUTTON MICRO-INTERACTIONS */
+    .btn-interactive {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      transition: var(--transition-standard);
+      cursor: pointer;
+      user-select: none;
+      outline: none;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-interactive:hover:not(:disabled):not(.is-loading) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -3px rgba(37, 99, 235, 0.25), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-interactive:active:not(:disabled):not(.is-loading) {
+      transform: translateY(1px) scale(0.97);
+      transition: var(--transition-fast);
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-interactive:focus-visible {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 3px;
+    }
+
+    .btn-interactive:disabled,
+    .btn-interactive[disabled],
+    .btn-interactive.is-disabled {
+      opacity: 0.5;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      transform: none !important;
+      box-shadow: none !important;
+      filter: grayscale(25%);
+    }
+
+    .btn-interactive.is-loading {
+      cursor: wait !important;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .btn-interactive.is-loading .btn-text {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .btn-interactive.is-loading::after {
+      content: "";
+      position: absolute;
+      width: 1.25rem;
+      height: 1.25rem;
+      top: 50%;
+      left: 50%;
+      margin-top: -0.625rem;
+      margin-left: -0.625rem;
+      border: 2.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: btn-spinner 0.7s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    }
+
+    .btn-interactive.btn-spinner-dark.is-loading::after {
+      border-color: rgba(15, 23, 42, 0.2);
+      border-top-color: #0f172a;
+    }
+
+    @keyframes btn-spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* 2. FORM INTERACTION MICRO-INTERACTIONS */
+    .input-interactive {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+    }
+
+    /* Requirement 1: Animasi fokus pada input */
+    .input-interactive:focus {
+      background-color: #ffffff !important;
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transform: translateY(-1px);
+    }
+
+    /* Requirement 4: Indikator keberhasilan setelah input valid */
+    .input-interactive.is-valid {
+      border-color: #10b981 !important;
+      background-color: #f0fdf4 !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+    }
+
+    /* Requirement 2 & 3: Validasi Real-time & Error State */
+    .input-interactive.is-invalid {
+      border-color: #ef4444 !important;
+      background-color: #fef2f2 !important;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+      animation: shake-error 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes shake-error {
+
+      10%,
+      90% {
+        transform: translate3d(-1px, 0, 0);
+      }
+
+      20%,
+      80% {
+        transform: translate3d(2px, 0, 0);
+      }
+
+      30%,
+      50%,
+      70% {
+        transform: translate3d(-3px, 0, 0);
+      }
+
+      40%,
+      60% {
+        transform: translate3d(3px, 0, 0);
+      }
+    }
+
+    /* Indikator Status Ikon Beranimasi (Scale Pop-in) */
+    .input-feedback-icon {
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    .input-feedback-icon.show-feedback {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* Requirement 3: Pesan kesalahan yang informatif (Slide Down) */
+    .form-feedback-message {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-feedback-message.show-message {
+      max-height: 60px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Ripple Wave Effect */
+    .btn-ripple {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.45);
+      transform: scale(0);
+      animation: ripple-animation 0.55s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Card Interactive */
+    .card-interactive {
+      transition: var(--transition-standard);
+    }
+
+    .card-interactive:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+    }
+
+    /* PAYMENT INTERACTION & SVG SUCCESS ANIMATION */
+    .pop-in-spring {
+      animation: pop-in-spring 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes pop-in-spring {
+      0% { transform: scale(0.3); opacity: 0; }
+      70% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .checkmark-svg {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: block;
+      stroke-width: 3;
+      stroke: #10b981;
+      stroke-miterlimit: 10;
+      box-shadow: inset 0 0 0 #10b981;
+      animation: fill-check 0.4s ease-in-out 0.4s forwards, scale-check 0.3s ease-in-out 0.9s both;
+    }
+    .checkmark-circle {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 3;
+      stroke-miterlimit: 10;
+      stroke: #10b981;
+      fill: none;
+      animation: stroke-circle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    .checkmark-check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: stroke-check 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.5s forwards;
+    }
+    @keyframes stroke-circle { 100% { stroke-dashoffset: 0; } }
+    @keyframes stroke-check { 100% { stroke-dashoffset: 0; } }
+    @keyframes fill-check { 100% { box-shadow: inset 0 0 0 30px rgba(16, 185, 129, 0.12); } }
+    @keyframes scale-check { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+
+    .status-pulse-amber {
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+      animation: status-pulse-amber-kf 2s infinite;
+    }
+    @keyframes status-pulse-amber-kf {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    .toast-item {
+      pointer-events: auto;
+      transform: translateX(120%);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .toast-item.show { transform: translateX(0); opacity: 1; }
+    .toast-item.hide { transform: translateX(120%); opacity: 0; }
+  </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 min-h-screen py-10 px-4 sm:px-6 lg:px-8 antialiased">
+
+  <div class="max-w-5xl mx-auto space-y-10">
+
+    <!-- Header Showcase -->
+    <div
+      class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-6 card-interactive">
+      <div>
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 mb-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Design System &amp; Micro-Interactions Lab
+        </span>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Showcase UI/UX Micro-Interactions</h1>
+        <p class="text-sm text-slate-600 mt-1 max-w-2xl">
+          Pengujian lengkap untuk <strong>Button Interactions</strong> dan <strong>Form Interactions (Real-time
+            Validation)</strong> pada Sistem Informasi Keuangan Telaga Rizqy 21.
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="simulator_pembayaran_online.html"
+          class="btn-interactive px-4 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-2xl shadow-md">
+          <i class="fa-solid fa-cash-register"></i> Buka Simulator POS
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================== BAGIAN 2: FORM INTERACTION LAB ==================== -->
+    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 space-y-6 card-interactive">
+      <div class="border-b border-slate-100 pb-4">
+        <div class="flex items-center gap-2 text-blue-600 mb-1">
+          <i class="fa-solid fa-pen-to-square text-base"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Modul Interaksi Formulir (Form Interaction)</span>
+        </div>
+        <h2 class="text-lg font-black text-slate-900">Uji Coba Validasi Real-time &amp; Micro-Interactions Form</h2>
+        <p class="text-xs text-slate-500 mt-0.5">
+          Ketik langsung pada kolom input di bawah ini untuk melihat animasi fokus, validasi instan, pesan kesalahan
+          informatif, dan indikator centang hijau.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Kasus 1: Input Username Akun Staf -->
+        <div class="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-700">1. Username Staf / Kasir</label>
+            <span class="text-[10px] text-slate-400 font-semibold">Min. 4 Karakter, Huruf &amp; Angka</span>
+          </div>
+
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold"
+              id="iconUserLab">
+              <i class="fa-solid fa-user"></i>
+            </span>
+            <input type="text" id="demoUsername" oninput="testUsernameValidation()"
+              placeholder="Ketik username (cth: alda_kasir)..."
+              class="input-interactive w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800">
+
+            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+              <i id="demoUserSuccess" class="fa-solid fa-circle-check text-emerald-500 input-feedback-icon"></i>
+              <i id="demoUserError"
+                class="fa-solid fa-circle-exclamation text-red-500 input-feedback-icon absolute"></i>
+            </span>
+          </div>
+
+          <!-- Pesan Error / Sukses Informatif -->
+          <div id="demoUserErrorMsg"
+            class="form-feedback-message text-[11px] font-semibold text-red-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> <span id="demoUserErrorText">Username minimal 4
+              karakter tanpa spasi.</span>
+          </div>
+          <div id="demoUserSuccessMsg"
+            class="form-feedback-message text-[11px] font-semibold text-emerald-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-[10px]"></i> <span>Format username valid dan tersedia!</span>
+          </div>
+        </div>
+
+        <!-- Kasus 2: Kalkulator Pembayaran Kasir POS (Uang Tunai vs Total Belanja) -->
+        <div class="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-700">2. Pembayaran Tunai Kasir POS</label>
+            <span class="text-[10px] font-bold text-blue-600">Total Tagihan: Rp 96.000</span>
+          </div>
+
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-xs"
+              id="iconCashLab">
+              Rp
+            </span>
+            <input type="number" id="demoCash" oninput="testCashValidation()"
+              placeholder="Ketik uang diterima (cth: 100000)..."
+              class="input-interactive w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900">
+
+            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+              <i id="demoCashSuccess" class="fa-solid fa-circle-check text-emerald-500 input-feedback-icon"></i>
+              <i id="demoCashError"
+                class="fa-solid fa-circle-exclamation text-red-500 input-feedback-icon absolute"></i>
+            </span>
+          </div>
+
+          <!-- Pesan Error / Sukses Informatif -->
+          <div id="demoCashErrorMsg"
+            class="form-feedback-message text-[11px] font-semibold text-red-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> <span id="demoCashErrorText">Nominal uang tunai
+              kurang dari tagihan.</span>
+          </div>
+          <div id="demoCashSuccessMsg"
+            class="form-feedback-message text-[11px] font-semibold text-emerald-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-[10px]"></i> <span id="demoCashSuccessText">Uang mencukupi.
+              Kembalian: Rp 4.000</span>
+          </div>
+        </div>
+
+        <!-- Kasus 3: Input Password & Indikator Kekuatan -->
+        <div class="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-700">3. Password Staf</label>
+            <span class="text-[10px] text-slate-400 font-semibold" id="passStrengthLabel">Min. 6 Karakter</span>
+          </div>
+
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold"
+              id="iconPassLab">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="demoPassword" oninput="testPasswordValidation()"
+              placeholder="Ketik kata sandi..."
+              class="input-interactive w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-800">
+
+            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+              <i id="demoPassSuccess" class="fa-solid fa-circle-check text-emerald-500 input-feedback-icon"></i>
+              <i id="demoPassError"
+                class="fa-solid fa-circle-exclamation text-red-500 input-feedback-icon absolute"></i>
+            </span>
+          </div>
+
+          <!-- Strength Meter Bar -->
+          <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div id="strengthBar" class="h-full bg-slate-300 w-0 transition-all duration-300"></div>
+          </div>
+
+          <div id="demoPassErrorMsg"
+            class="form-feedback-message text-[11px] font-semibold text-red-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> <span>Kata sandi minimal 6 karakter.</span>
+          </div>
+        </div>
+
+        <!-- Kasus 4: Validasi Harga Jual vs Harga Modal Produk Susu -->
+        <div class="p-5 bg-slate-50/70 rounded-2xl border border-slate-200/80 space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-700">4. Validasi Harga Jual (Margin Laba)</label>
+            <span class="text-[10px] text-slate-400 font-semibold">Harga Modal HPP: Rp 30.000</span>
+          </div>
+
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-xs"
+              id="iconPriceLab">
+              Rp
+            </span>
+            <input type="number" id="demoPrice" oninput="testPriceValidation()" placeholder="Ketik harga jual produk..."
+              class="input-interactive w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900">
+
+            <span class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none">
+              <i id="demoPriceSuccess" class="fa-solid fa-circle-check text-emerald-500 input-feedback-icon"></i>
+              <i id="demoPriceError"
+                class="fa-solid fa-circle-exclamation text-red-500 input-feedback-icon absolute"></i>
+            </span>
+          </div>
+
+          <!-- Pesan Error / Margin Laba -->
+          <div id="demoPriceErrorMsg"
+            class="form-feedback-message text-[11px] font-semibold text-red-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-[10px]"></i> <span>Harga jual tidak boleh lebih rendah dari
+              harga modal (Rp 30.000).</span>
+          </div>
+          <div id="demoPriceSuccessMsg"
+            class="form-feedback-message text-[11px] font-semibold text-emerald-600 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-[10px]"></i> <span id="demoMarginText">Margin keuntungan tercatat
+              valid.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== BAGIAN 1: BUTTON INTERACTION LAB ==================== -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- State 1: Smooth Hover -->
+      <div
+        class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 card-interactive flex flex-col justify-between">
+        <div>
+          <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold mb-3">
+            <i class="fa-solid fa-arrow-pointer"></i>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">1. Efek Hover Halus</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Pergeseran elevasi ke atas (<code>translateY(-2px)</code>) dengan peningkatan bayangan dinamis berbasis
+            kurva Bezier halus.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-slate-100">
+          <button
+            class="btn-interactive btn-ripple w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs">
+            <span class="btn-text flex items-center justify-center gap-2">
+              <i class="fa-solid fa-cart-plus"></i> Arahkan Kursor (Hover)
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- State 2: Active Pressed Animation -->
+      <div
+        class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 card-interactive flex flex-col justify-between">
+        <div>
+          <div
+            class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold mb-3">
+            <i class="fa-solid fa-hand-pointer"></i>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">2. Animasi Saat Ditekan</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Umpan balik taktil pegas (<code>scale(0.97) translateY(1px)</code>) dan efek gelombang riak sentuh saat
+            tombol diklik.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-slate-100">
+          <button
+            class="btn-interactive btn-ripple w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs">
+            <span class="btn-text flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bullseye"></i> Klik &amp; Tahan (Active)
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- State 3: Loading Spinner -->
+      <div
+        class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 card-interactive flex flex-col justify-between">
+        <div>
+          <div
+            class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold mb-3">
+            <i class="fa-solid fa-spinner animate-spin"></i>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">3. Loading Spinner</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Spinner rotasi SVG berkecepatan 0.7 detik, mempertahankan ukuran tombol agar tidak terjadi pergeseran tata
+            letak (CLS = 0).
+          </p>
+        </div>
+        <div class="pt-4 border-t border-slate-100">
+          <button id="demoSpinnerBtn" onclick="toggleDemoSpinner()"
+            class="btn-interactive btn-ripple w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs">
+            <span class="btn-text flex items-center justify-center gap-2">
+              <i class="fa-solid fa-play"></i> Uji Loading Spinner
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- State 4: Disabled State -->
+      <div
+        class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 card-interactive flex flex-col justify-between">
+        <div>
+          <div
+            class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center font-bold mb-3">
+            <i class="fa-solid fa-ban"></i>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">4. Kondisi Disabled</h3>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Menonaktifkan interaksi klik (<code>cursor: not-allowed</code>, <code>opacity: 0.5</code>) saat keranjang
+            kosong atau input belum valid.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-slate-100">
+          <button disabled class="btn-interactive w-full py-3 px-4 bg-slate-300 text-slate-500 rounded-2xl text-xs">
+            <span class="btn-text flex items-center justify-center gap-2">
+              <i class="fa-solid fa-lock"></i> Tombol Dinonaktifkan
+            </span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== BAGIAN 3: PAYMENT INTERACTION & SERVER VERIFICATION LAB ==================== -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <div>
+          <span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-widest block">Spesifikasi 5</span>
+          <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-credit-card text-purple-600"></i>
+            Payment Interaction &amp; Server-Verified Micro-Interactions Lab
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Pengujian langsung untuk Loading, Indikator Status, Animasi Sukses, Toast Notifikasi, dan Aturan Server Guard</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800 self-start sm:self-auto">
+          Security &amp; UX Guard
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- Kotak Simulasi Layar Status Pembayaran -->
+        <div class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-3xl p-6 text-center space-y-4 min-h-[300px] flex flex-col justify-center items-center relative overflow-hidden" id="demoPaymentBox">
+          
+          <!-- State: Idle -->
+          <div id="demoStateIdle" class="space-y-2">
+            <div class="w-16 h-16 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center mx-auto text-2xl">
+              <i class="fa-solid fa-cash-register"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-700">Kotak Interaksi Pembayaran</h4>
+            <p class="text-[11px] text-slate-400 max-w-xs">Klik tombol kontrol di sebelah kanan untuk menguji setiap kondisi interaksi pembayaran.</p>
+          </div>
+
+          <!-- State: Loading -->
+          <div id="demoStateLoading" class="space-y-3 hidden">
+            <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mx-auto text-2xl">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-800">1. Loading Pembuatan Transaksi...</h4>
+            <p class="text-[11px] text-slate-500">Menghubungkan ke gateway dan mencadangkan stok susu kambing.</p>
+          </div>
+
+          <!-- State: Waiting QRIS (Pulse Amber) -->
+          <div id="demoStateWaiting" class="space-y-3 hidden">
+            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-2xl status-pulse-amber">
+              <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Menunggu Pembayaran Pelanggan
+              </span>
+              <h4 class="text-xs font-bold text-slate-800 mt-2">Invoice: INV/20261113/TR-99812</h4>
+              <p class="text-[11px] text-slate-500">Mendengarkan webhook server (Total: Rp 75.000)</p>
+            </div>
+          </div>
+
+          <!-- State: Verifying Server -->
+          <div id="demoStateVerifying" class="space-y-3 hidden">
+            <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mx-auto text-2xl">
+              <i class="fa-solid fa-arrows-rotate fa-spin"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-800">2. Memverifikasi dengan Server...</h4>
+            <p class="text-[11px] text-slate-500">Menolak menampilkan status sukses sebelum konfirmasi valid masuk dari server.</p>
+          </div>
+
+          <!-- State: Success (Animasi SVG Checkmark) -->
+          <div id="demoStateSuccess" class="space-y-3 hidden pop-in-spring">
+            <div class="flex items-center justify-center mx-auto">
+              <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+              </svg>
+            </div>
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <i class="fa-solid fa-circle-check text-emerald-600"></i> LUNAS TERVERIFIKASI SERVER
+              </span>
+              <h4 class="text-sm font-black text-slate-900 mt-1">Pembayaran Sah Diterima!</h4>
+              <p class="text-[11px] text-slate-500">Struk thermal telah digenerate otomatis.</p>
+            </div>
+          </div>
+
+          <!-- State: Failed -->
+          <div id="demoStateFailed" class="space-y-3 hidden">
+            <div class="w-16 h-16 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto text-2xl">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800 border border-red-300">
+                DIBATALKAN / GAGAL
+              </span>
+              <h4 class="text-xs font-bold text-slate-800 mt-1">Pembayaran Ditolak</h4>
+              <p class="text-[11px] text-slate-500">Batas waktu habis atau transaksi dibatalkan pelanggan.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tombol Kontrol Interaktif -->
+        <div class="lg:col-span-7 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button onclick="triggerDemoState('loading')" class="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition text-left flex items-center gap-2">
+              <i class="fa-solid fa-spinner text-blue-600"></i>
+              <span>1. Loading Pembuatan</span>
+            </button>
+            <button onclick="triggerDemoState('waiting')" class="py-2.5 px-3 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl text-xs font-bold border border-amber-200 transition text-left flex items-center gap-2">
+              <i class="fa-solid fa-qrcode text-amber-600"></i>
+              <span>2. Menunggu QRIS (Pulse)</span>
+            </button>
+            <button onclick="triggerDemoState('verifying')" class="py-2.5 px-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl text-xs font-bold border border-indigo-200 transition text-left flex items-center gap-2">
+              <i class="fa-solid fa-arrows-rotate text-indigo-600"></i>
+              <span>3. Memverifikasi Server</span>
+            </button>
+            <button onclick="triggerDemoState('success')" class="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200 transition text-left flex items-center gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-600"></i>
+              <span>4. Animasi Sukses (SVG Draw)</span>
+            </button>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button onclick="triggerToastDemo('success')" class="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bell"></i> Notifikasi Toast Berhasil
+            </button>
+            <button onclick="triggerToastDemo('error')" class="py-2.5 px-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-circle-exclamation"></i> Notifikasi Toast Gagal
+            </button>
+          </div>
+
+          <!-- Simulasi Aturan Server Guard -->
+          <div class="p-3 bg-slate-900 text-white rounded-2xl text-xs space-y-2 mt-2">
+            <div class="flex items-center gap-2 text-amber-400 font-bold">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Prinsip Keamanan: Server Verification Guard</span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Tekan tombol simulasi di bawah untuk menguji aturan sistem: status SUKSES tidak akan pernah muncul sebelum ada konfirmasi valid dari server.
+            </p>
+            <button onclick="simulateServerGuardDemo()" class="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-xs transition flex items-center justify-center gap-2 shadow">
+              <i class="fa-solid fa-play"></i> Jalankan Simulasi Siklus Penuh (Guard Active)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BAGIAN 4: NOTIFICATION INTERACTION LAB (TOAST NOTIFICATIONS) ==================== -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+        <div>
+          <span class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest block">Spesifikasi 6</span>
+          <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-bell text-blue-600"></i>
+            Toast Notification Interaction Lab
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Pengujian 4 Status (Success, Error, Warning, Info), Animasi Masuk/Keluar, Tombol Tutup Pengguna, Progress Countdown, &amp; Pause on Hover</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 self-start sm:self-auto">
+          Tactile Feedback
+        </span>
+      </div>
+
+      <!-- 4 Cards Preview Tiap State -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- State 1: Success -->
+        <div class="p-4 bg-emerald-50/50 border border-emerald-200 rounded-2xl flex flex-col justify-between space-y-3">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-emerald-900">Success State</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">Konfirmasi aksi berhasil, verifikasi lunas, dan data tersimpan.</p>
+            </div>
+          </div>
+          <button onclick="triggerToastDemo('success')" class="btn-interactive w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm">
+            <i class="fa-solid fa-play mr-1"></i> Munculkan Toast Sukses
+          </button>
+        </div>
+
+        <!-- State 2: Error -->
+        <div class="p-4 bg-red-50/50 border border-red-200 rounded-2xl flex flex-col justify-between space-y-3">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-red-900">Error State</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">Validasi gagal, transaksi dibatalkan, atau jaringan terputus.</p>
+            </div>
+          </div>
+          <button onclick="triggerToastDemo('error')" class="btn-interactive w-full py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow-sm">
+            <i class="fa-solid fa-play mr-1"></i> Munculkan Toast Error
+          </button>
+        </div>
+
+        <!-- State 3: Warning -->
+        <div class="p-4 bg-amber-50/50 border border-amber-200 rounded-2xl flex flex-col justify-between space-y-3">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-amber-900">Warning State</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">Peringatan stok susu menipis atau uang tunai kurang.</p>
+            </div>
+          </div>
+          <button onclick="triggerToastDemo('warning')" class="btn-interactive w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition shadow-sm">
+            <i class="fa-solid fa-play mr-1"></i> Munculkan Toast Warning
+          </button>
+        </div>
+
+        <!-- State 4: Information -->
+        <div class="p-4 bg-blue-50/50 border border-blue-200 rounded-2xl flex flex-col justify-between space-y-3">
+          <div class="flex items-start gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-blue-900">Information State</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">Status koneksi webhook Midtrans dan informasi panduan sistem.</p>
+            </div>
+          </div>
+          <button onclick="triggerToastDemo('info')" class="btn-interactive w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm">
+            <i class="fa-solid fa-play mr-1"></i> Munculkan Toast Info
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Detail Fitur Interaktif Toast -->
+      <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs text-slate-600 space-y-2">
+        <h4 class="font-bold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i>
+          Fitur Micro-Interactions Notifikasi Toast:
+        </h4>
+        <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-600 pl-1">
+          <li><strong>Animasi Masuk (*Slide-in &amp; Spring Pop*):</strong> Meluncur dari luar layar kanan (<code>translateX(125%) &rarr; 0</code>) dengan durasi <code>0.38s</code>.</li>
+          <li><strong>Animasi Keluar (*Slide-out &amp; Collapse*):</strong> Saat ditutup, meluncur kembali ke kanan dan melipat tingginya sehingga notifikasi di bawahnya bergeser naik tanpa patah-patah (*zero CLS*).</li>
+          <li><strong>Notifikasi Dapat Ditutup Pengguna:</strong> Tombol silang (<code>&times;</code>) di pojok kanan notifikasi dapat diklik kapan saja untuk menutup seketika.</li>
+          <li><strong>Progress Countdown Bar:</strong> Garis berwarna di dasar notifikasi menyusut dari 100% ke 0% menunjukkan sisa waktu otomatis sebelum ditutup.</li>
+          <li><strong>Pause on Hover:</strong> Ketika kursor mouse diarahkan ke dalam notifikasi, penghitung waktu mundur otomatis berhenti agar pengguna leluasa membaca pesan panjang.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Global Toast Container for Showcase -->
+    <div id="showcase-toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2.5 pointer-events-none max-w-sm w-full"></div>
+
+  </div>
+
+  <!-- Real-time Interactive Validation Scripts -->
+  <script>
+    // 1. Username Real-time Validation
+    function testUsernameValidation() {
+      const input = document.getElementById('demoUsername');
+      const val = input.value.trim();
+      const success = document.getElementById('demoUserSuccess');
+      const error = document.getElementById('demoUserError');
+      const errorMsg = document.getElementById('demoUserErrorMsg');
+      const successMsg = document.getElementById('demoUserSuccessMsg');
+      const icon = document.getElementById('iconUserLab');
+
+      if (val.length === 0) {
+        input.classList.remove('is-valid', 'is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.remove('show-feedback');
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.remove('show-message');
+        icon.className = "absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold";
+      } else if (val.length >= 4 && !/\s/.test(val)) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        error.classList.remove('show-feedback');
+        success.classList.add('show-feedback');
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.add('show-message');
+        icon.className = "absolute inset-y-0 left-0 pl-3.5 flex items-center text-emerald-500 font-semibold";
+      } else {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.add('show-feedback');
+        errorMsg.classList.add('show-message');
+        successMsg.classList.remove('show-message');
+        icon.className = "absolute inset-y-0 left-0 pl-3.5 flex items-center text-red-500 font-semibold";
+      }
+    }
+
+    // 2. Cash Payment Real-time Validation
+    function testCashValidation() {
+      const input = document.getElementById('demoCash');
+      const target = 96000;
+      const rawVal = parseFloat(input.value);
+      const success = document.getElementById('demoCashSuccess');
+      const error = document.getElementById('demoCashError');
+      const errorMsg = document.getElementById('demoCashErrorMsg');
+      const successMsg = document.getElementById('demoCashSuccessMsg');
+      const errorText = document.getElementById('demoCashErrorText');
+      const successText = document.getElementById('demoCashSuccessText');
+
+      if (isNaN(rawVal) || rawVal === 0) {
+        input.classList.remove('is-valid', 'is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.remove('show-feedback');
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.remove('show-message');
+      } else if (rawVal < target) {
+        const shortage = target - rawVal;
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.add('show-feedback');
+        errorText.textContent = `Nominal uang tunai kurang Rp ${shortage.toLocaleString('id-ID')} dari total belanja.`;
+        errorMsg.classList.add('show-message');
+        successMsg.classList.remove('show-message');
+      } else {
+        const change = rawVal - target;
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        error.classList.remove('show-feedback');
+        success.classList.add('show-feedback');
+        successText.textContent = `Uang tunai cukup. Uang kembalian: Rp ${change.toLocaleString('id-ID')}`;
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.add('show-message');
+      }
+    }
+
+    // 3. Password Validation & Strength
+    function testPasswordValidation() {
+      const input = document.getElementById('demoPassword');
+      const val = input.value;
+      const success = document.getElementById('demoPassSuccess');
+      const error = document.getElementById('demoPassError');
+      const errorMsg = document.getElementById('demoPassErrorMsg');
+      const bar = document.getElementById('strengthBar');
+      const label = document.getElementById('passStrengthLabel');
+
+      if (val.length === 0) {
+        input.classList.remove('is-valid', 'is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.remove('show-feedback');
+        errorMsg.classList.remove('show-message');
+        bar.style.width = '0%';
+        bar.className = 'h-full bg-slate-300 w-0 transition-all duration-300';
+        label.textContent = 'Min. 6 Karakter';
+        label.className = 'text-[10px] text-slate-400 font-semibold';
+      } else if (val.length < 6) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.add('show-feedback');
+        errorMsg.classList.add('show-message');
+        bar.style.width = '30%';
+        bar.className = 'h-full bg-red-500 transition-all duration-300';
+        label.textContent = 'Terlalu Pendek (Lemah)';
+        label.className = 'text-[10px] text-red-500 font-bold';
+      } else {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        error.classList.remove('show-feedback');
+        success.classList.add('show-feedback');
+        errorMsg.classList.remove('show-message');
+
+        if (val.length >= 10 && /[A-Z]/.test(val) && /[0-9]/.test(val)) {
+          bar.style.width = '100%';
+          bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+          label.textContent = 'Sangat Kuat (Aman)';
+          label.className = 'text-[10px] text-emerald-600 font-bold';
+        } else {
+          bar.style.width = '65%';
+          bar.className = 'h-full bg-blue-500 transition-all duration-300';
+          label.textContent = 'Cukup Baik';
+          label.className = 'text-[10px] text-blue-600 font-bold';
+        }
+      }
+    }
+
+    // 4. Price Validation
+    function testPriceValidation() {
+      const input = document.getElementById('demoPrice');
+      const modal = 30000;
+      const rawVal = parseFloat(input.value);
+      const success = document.getElementById('demoPriceSuccess');
+      const error = document.getElementById('demoPriceError');
+      const errorMsg = document.getElementById('demoPriceErrorMsg');
+      const successMsg = document.getElementById('demoPriceSuccessMsg');
+      const marginText = document.getElementById('demoMarginText');
+
+      if (isNaN(rawVal) || rawVal === 0) {
+        input.classList.remove('is-valid', 'is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.remove('show-feedback');
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.remove('show-message');
+      } else if (rawVal < modal) {
+        input.classList.remove('is-valid');
+        input.classList.add('is-invalid');
+        success.classList.remove('show-feedback');
+        error.classList.add('show-feedback');
+        errorMsg.classList.add('show-message');
+        successMsg.classList.remove('show-message');
+      } else {
+        const margin = rawVal - modal;
+        const percent = ((margin / modal) * 100).toFixed(0);
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        error.classList.remove('show-feedback');
+        success.classList.add('show-feedback');
+        marginText.textContent = `Valid! Margin Laba Bersih: Rp ${margin.toLocaleString('id-ID')} (+${percent}%)`;
+        errorMsg.classList.remove('show-message');
+        successMsg.classList.add('show-message');
+      }
+    }
+
+    // Toggle Demo Spinner
+    function toggleDemoSpinner() {
+      const btn = document.getElementById('demoSpinnerBtn');
+      btn.classList.add('is-loading');
+      setTimeout(() => { btn.classList.remove('is-loading'); }, 1500);
+    }
+
+    // =========================================================
+    // 3. PAYMENT INTERACTION LAB & SERVER GUARD LOGIC
+    // =========================================================
+    function triggerDemoState(state) {
+      const states = ['demoStateIdle', 'demoStateLoading', 'demoStateWaiting', 'demoStateVerifying', 'demoStateSuccess', 'demoStateFailed'];
+      states.forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.classList.add('hidden');
+      });
+
+      const active = document.getElementById('demoState' + state.charAt(0).toUpperCase() + state.slice(1));
+      if (active) active.classList.remove('hidden');
+
+      if (state === 'success') {
+        triggerToastDemo('success');
+      } else if (state === 'failed') {
+        triggerToastDemo('error');
+      }
+    }
+
+    function triggerToastDemo(type = 'success', customTitle = null, customMsg = null) {
+      const container = document.getElementById('showcase-toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-item relative bg-white border rounded-2xl p-4 shadow-xl flex items-start gap-3 pointer-events-auto transition-all text-xs overflow-hidden';
+
+      let title = customTitle;
+      let message = customMsg;
+      let iconHtml = '';
+      let borderClass = '';
+      let progressColor = '';
+      const duration = 5000;
+
+      if (type === 'success') {
+        borderClass = 'border-emerald-200 text-slate-800 shadow-emerald-500/10';
+        progressColor = 'bg-emerald-500';
+        iconHtml = '<div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 text-base font-bold shadow-sm pop-in-spring"><i class="fa-solid fa-circle-check"></i></div>';
+        if (!title) title = 'Transaksi Berhasil Disimpan!';
+        if (!message) message = 'Faktur TRX-20261113-001 lunas terverifikasi valid di database server. Total: Rp 75.000.';
+      } else if (type === 'error') {
+        borderClass = 'border-red-200 text-slate-800 shadow-red-500/10';
+        progressColor = 'bg-red-500';
+        iconHtml = '<div class="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0 text-base font-bold shadow-sm pop-in-spring"><i class="fa-solid fa-circle-xmark"></i></div>';
+        if (!title) title = 'Pembayaran Gagal / Dibatalkan';
+        if (!message) message = 'Batas waktu pembayaran kadaluarsa atau saldo e-wallet tidak mencukupi.';
+      } else if (type === 'warning') {
+        borderClass = 'border-amber-200 text-slate-800 shadow-amber-500/10';
+        progressColor = 'bg-amber-500';
+        iconHtml = '<div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 text-base font-bold shadow-sm pop-in-spring"><i class="fa-solid fa-triangle-exclamation"></i></div>';
+        if (!title) title = 'Peringatan: Stok Susu Menipis!';
+        if (!message) message = 'Susu Segar Pasteurisasi Rasa Cokelat tersisa 4 botol di bawah batas minimum.';
+      } else {
+        borderClass = 'border-blue-200 text-slate-800 shadow-blue-500/10';
+        progressColor = 'bg-blue-500';
+        iconHtml = '<div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 text-base font-bold shadow-sm pop-in-spring"><i class="fa-solid fa-circle-info"></i></div>';
+        if (!title) title = 'Informasi Gateway Midtrans';
+        if (!message) message = 'Sistem terhubung aktif ke Midtrans Sandbox API dengan verifikasi tanda tangan SHA-512.';
+      }
+
+      toast.classList.add(...borderClass.split(' '));
+      toast.innerHTML = `
+        ${iconHtml}
+        <div class="flex-1 pr-1">
+          <h4 class="font-bold text-slate-900 text-xs">${title}</h4>
+          <p class="text-slate-500 text-[11px] mt-0.5 leading-relaxed">${message}</p>
+        </div>
+        <button type="button" class="btn-interactive text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1 transition" title="Tutup Notifikasi">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+        <div class="toast-progress ${progressColor}"></div>
+      `;
+
+      container.appendChild(toast);
+
+      // Animasi Masuk (Slide-in)
+      requestAnimationFrame(() => {
+        toast.classList.add('show');
+      });
+
+      const progressBar = toast.querySelector('.toast-progress');
+      const closeBtn = toast.querySelector('button');
+
+      let timerId = null;
+      let remaining = duration;
+      let startTime = Date.now();
+
+      // Animasi Keluar (Slide-out & Collapse)
+      function closeToast() {
+        if (timerId) clearTimeout(timerId);
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 400);
+      }
+
+      closeBtn.addEventListener('click', closeToast);
+
+      if (duration > 0) {
+        // Progress countdown
+        progressBar.style.transition = `width ${duration}ms linear`;
+        requestAnimationFrame(() => {
+          progressBar.style.width = '0%';
+        });
+
+        // Pause on Hover & Resume on Leave
+        toast.addEventListener('mouseenter', () => {
+          if (timerId) clearTimeout(timerId);
+          remaining -= Date.now() - startTime;
+          const currentWidth = (remaining / duration) * 100;
+          progressBar.style.transition = 'none';
+          progressBar.style.width = `${Math.max(0, currentWidth)}%`;
+        });
+
+        toast.addEventListener('mouseleave', () => {
+          if (remaining > 0) {
+            startTime = Date.now();
+            progressBar.style.transition = `width ${remaining}ms linear`;
+            progressBar.style.width = '0%';
+            timerId = setTimeout(closeToast, remaining);
+          } else {
+            closeToast();
+          }
+        });
+
+        timerId = setTimeout(closeToast, duration);
+      }
+    }
+
+    // Demonstrasi Siklus Lengkap dengan Penegakan Server Guard
+    function simulateServerGuardDemo() {
+      // 1. Loading Pembuatan Transaksi
+      triggerDemoState('loading');
+
+      // 2. Menunggu Pembayaran QRIS (setelah 1.2 detik)
+      setTimeout(() => {
+        triggerDemoState('waiting');
+
+        // 3. User menutup popup Snap -> Masuk State Verifying (setelah 2.5 detik)
+        setTimeout(() => {
+          triggerDemoState('verifying');
+
+          // Coba klaim di client: sistem menolak menampilkan sukses!
+          // Server baru mengonfirmasi setelah 2 detik lagi:
+          setTimeout(() => {
+            // Konfirmasi valid server tiba -> Baru boleh trigger sukses!
+            triggerDemoState('success');
+          }, 2000);
+
+        }, 2200);
+
+      }, 1200);
+    }
+
+    // Ripple Feedback Script
+    document.addEventListener('click', function (e) {
+      const target = e.target.closest('.btn-ripple');
+      if (!target || target.disabled || target.classList.contains('is-loading')) return;
+
+      const circle = document.createElement('span');
+      const diameter = Math.max(target.clientWidth, target.clientHeight);
+      const radius = diameter / 2;
+      const rect = target.getBoundingClientRect();
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - rect.left - radius}px`;
+      circle.style.top = `${e.clientY - rect.top - radius}px`;
+      circle.classList.add('ripple-effect');
+
+      const existingRipple = target.querySelector('.ripple-effect');
+      if (existingRipple) existingRipple.remove();
+
+      target.appendChild(circle);
+      setTimeout(() => circle.remove(), 600);
+    });
+  </script>
+
+</body>
+
+</html>

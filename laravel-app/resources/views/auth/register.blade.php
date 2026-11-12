@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register · Sistem Pengolahan Data Transaksi Keuangan Telaga Rizqy 21</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#eff5f5;color:#17334a;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.card{width:min(100%,470px);padding:36px;background:#fff;border:1px solid #e3ebed;border-radius:20px;box-shadow:0 20px 55px rgba(24,57,73,.1)}.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}.mark{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:#eaf5f1}.name{font-size:14px;font-weight:800;letter-spacing:.03em}.caption{margin-top:4px;color:#708594;font-size:11px}h1{margin:0 0 21px;font-size:25px;letter-spacing:-.03em}.field{margin-top:14px}label{display:block;margin-bottom:7px;font-size:13px;font-weight:650}input{width:100%;height:46px;padding:0 12px;border:1px solid #dce6e9;border-radius:9px;background:#fbfdfd;color:#17334a;font:inherit;font-size:14px}input:focus{outline:3px solid rgba(23,107,131,.15);border-color:#176b83}button{width:100%;height:48px;margin-top:21px;border:0;border-radius:9px;background:#176b83;color:#fff;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#105365}.errors{padding:11px 13px;margin-bottom:14px;border:1px solid #f0c8c8;border-radius:9px;background:#fff4f3;color:#a33131;font-size:12px;line-height:1.5}.errors ul{margin:0;padding-left:18px}.back{display:block;margin-top:18px;color:#176b83;text-align:center;font-size:13px;font-weight:650;text-decoration:none}.back:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand"><div class="mark" aria-hidden="true"><svg width="28" height="32" viewBox="0 0 40 44" fill="none"><path d="M14 3h12v5l3 5v25a3 3 0 0 1-3 3H14a3 3 0 0 1-3-3V13l3-5V3Z" stroke="#174E65" stroke-width="2.2" stroke-linejoin="round"/><path d="M14 8h12M11 15h18" stroke="#174E65" stroke-width="2.2" stroke-linecap="round"/><path d="M20 19c-3 4-4 5.5-4 7.3a4 4 0 0 0 8 0c0-1.8-1-3.3-4-7.3Z" fill="#78B99A"/></svg></div><div><div class="name">TELAGA RIZQY 21</div><div class="caption">Register akun</div></div></div>
+    <h1>Register</h1>
+    @if($errors->any())<div class="errors" role="alert"><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+    <form method="POST" action="{{ route('register.store') }}">
+      @csrf
+      <div class="field"><label for="name">Nama</label><input id="name" name="name" value="{{ old('name') }}" autocomplete="name" maxlength="100" required></div>
+      <div class="field"><label for="username">Username</label><input id="username" name="username" value="{{ old('username') }}" autocomplete="username" minlength="3" maxlength="50" required></div>
+      <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" maxlength="100" required></div>
+      <div class="field"><label for="password">Kata sandi</label><input id="password" name="password" type="password" autocomplete="new-password" minlength="4" required></div>
+      <div class="field"><label for="password_confirmation">Ulangi kata sandi</label><input id="password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" minlength="4" required></div>
+      <button type="submit">Buat akun</button>
+    </form>
+    <a class="back" href="{{ route('login') }}">Masuk</a>
+  </main>
+</body>
+</html>
