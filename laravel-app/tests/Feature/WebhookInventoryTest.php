@@ -63,6 +63,18 @@ class WebhookInventoryTest extends TestCase
         $this->assertTrue($transaction->fresh()->stok_dikurangi);
     }
 
+    public function test_notification_with_wrong_amount_cannot_mark_transaction_paid(): void
+    {
+        [$transaction, $product] = $this->pendingOrder();
+        $payload = $this->notification($transaction, 'settlement');
+        $payload['gross_amount'] = '999.00';
+        $payload['signature_key'] = hash('sha512', $transaction->kode_invoice.'200999.00test-server-key');
+
+        $this->postJson('/webhook/midtrans', $payload)->assertStatus(422);
+        $this->assertSame('belum_lunas', $transaction->fresh()->status_pembayaran);
+        $this->assertSame(4, $product->fresh()->stok);
+    }
+
     private function pendingOrder(): array
     {
         $outlet = Outlet::create(['kode_outlet' => 'OTL-01', 'nama_outlet' => 'Outlet Uji']);

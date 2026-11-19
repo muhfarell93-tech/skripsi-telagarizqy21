@@ -57,6 +57,28 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
+    public function switchRole(Request $request, string $targetRole)
+    {
+        $targetUser = match ($targetRole) {
+            'admin' => \App\Models\User::where('role', 'admin')->where('is_active', true)->where('id', 7)->first()
+                       ?? \App\Models\User::where('role', 'admin')->where('is_active', true)->first(),
+            'kasir' => \App\Models\User::where('role', 'kasir')->where('is_active', true)->where('id', 9)->first()
+                       ?? \App\Models\User::where('role', 'kasir')->where('is_active', true)->first(),
+            default => null,
+        };
+
+        if (!$targetUser) {
+            return back()->with('error', 'Akun target tidak ditemukan.');
+        }
+
+        Auth::login($targetUser);
+        $request->session()->regenerate();
+        LogAktivitas::catat(Auth::id(), 'AUTENTIKASI', 'login', "Beralih peran cepat ke {$targetUser->name} ({$targetUser->role})");
+
+        $redirectRoute = ($targetUser->role === 'admin') ? 'dashboard' : 'pos.index';
+        return redirect()->route($redirectRoute)->with('success', "Sekarang Anda masuk sebagai {$targetUser->name} (" . strtoupper($targetUser->role) . ")");
+    }
+
     private function destinationFor(string $role): string
     {
         return match ($role) {

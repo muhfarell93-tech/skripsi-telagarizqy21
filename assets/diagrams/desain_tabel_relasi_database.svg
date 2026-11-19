@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 980" width="1280" height="980" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <!-- Soft shadow for schema cards -->
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+
+    <!-- Marker Arrow & Dots -->
+    <marker id="dot-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6">
+      <circle cx="5" cy="5" r="4" fill="#16a34a"/>
+    </marker>
+    <marker id="dot-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6">
+      <circle cx="5" cy="5" r="4" fill="#2563eb"/>
+    </marker>
+    <marker id="dot-gold" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6">
+      <circle cx="5" cy="5" r="4" fill="#d97706"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <!-- Background Grid Subtle Pattern -->
+  <rect x="0" y="0" width="1280" height="980" fill="#f8fafc"/>
+  <rect x="20" y="20" width="1240" height="900" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" rx="8"/>
+
+  <!-- ========================================================================= -->
+  <!-- RELATION LINES (Rendered underneath table cards)                          -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. RELASI TB_USER.id_user (Green Lines) -->
+  <!-- tb_user (x:370, y:372) -> tb_pengeluaran (x:270, y:205) -->
+  <path d="M 370 372 L 320 372 L 320 205 L 270 205" fill="none" stroke="#16a34a" stroke-width="1.8" marker-start="url(#dot-green)" marker-end="url(#arrow-green)"/>
+
+  <!-- tb_user (x:370, y:372) -> tb_pembayaran (x:270, y:600) -->
+  <path d="M 370 372 L 320 372 L 320 600 L 270 600" fill="none" stroke="#16a34a" stroke-width="1.8" marker-start="url(#dot-green)" marker-end="url(#arrow-green)"/>
+
+  <!-- tb_user (x:610, y:372) -> tb_transaksi (x:880, y:242) -->
+  <path d="M 610 372 L 740 372 L 740 242 L 880 242" fill="none" stroke="#16a34a" stroke-width="1.8" marker-start="url(#dot-green)" marker-end="url(#arrow-green)"/>
+
+  <!-- tb_user (x:610, y:372) -> tb_log_pengeluaran (x:880, y:475) -->
+  <path d="M 610 372 L 755 372 L 755 475 L 880 475" fill="none" stroke="#16a34a" stroke-width="1.8" marker-start="url(#dot-green)" marker-end="url(#arrow-green)"/>
+
+  <!-- tb_user (x:610, y:372) -> tb_log (x:880, y:695) -->
+  <path d="M 610 372 L 770 372 L 770 695 L 880 695" fill="none" stroke="#16a34a" stroke-width="1.8" marker-start="url(#dot-green)" marker-end="url(#arrow-green)"/>
+
+  <!-- 2. RELASI TB_OUTLET.id_outlet (Blue Lines) -->
+  <!-- tb_outlet (x:490, y:690) -> tb_user (x:490, y:470) -->
+  <path d="M 490 690 L 490 470" fill="none" stroke="#2563eb" stroke-width="1.8" marker-start="url(#dot-blue)" marker-end="url(#arrow-blue)"/>
+
+  <!-- tb_outlet (x:370, y:720) -> tb_pembayaran (x:270, y:622) -->
+  <path d="M 370 720 L 305 720 L 305 622 L 270 622" fill="none" stroke="#2563eb" stroke-width="1.8" marker-start="url(#dot-blue)" marker-end="url(#arrow-blue)"/>
+
+  <!-- tb_outlet (x:370, y:690) -> tb_menu (x:370, y:155) -->
+  <path d="M 370 700 L 340 700 L 340 155 L 370 155" fill="none" stroke="#2563eb" stroke-width="1.8" marker-start="url(#dot-blue)" marker-end="url(#arrow-blue)"/>
+
+  <!-- tb_outlet (x:610, y:720) -> tb_transaksi (x:880, y:262) -->
+  <path d="M 610 720 L 800 720 L 800 262 L 880 262" fill="none" stroke="#2563eb" stroke-width="1.8" marker-start="url(#dot-blue)" marker-end="url(#arrow-blue)"/>
+
+  <!-- 3. RELASI TB_MENU.id_menu (Gold Line) -->
+  <!-- tb_menu (x:610, y:92) -> tb_transaksi (x:880, y:222) -->
+  <path d="M 610 92 L 780 92 L 780 222 L 880 222" fill="none" stroke="#d97706" stroke-width="1.8" marker-start="url(#dot-gold)" marker-end="url(#arrow-gold)"/>
+
+
+  <!-- ========================================================================= -->
+  <!-- 8 TABLE ENTITY CARDS (Styled in authentic MySQL Workbench/phpMyAdmin)     -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. TB_PENGELUARAN (Top-Left) -->
+  <g transform="translate(45, 60)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="225" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="225" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_pengeluaran</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="225" height="125" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_pengeluaran : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 jumlah_pengeluaran : int(11)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 keterangan_pengeluaran : text</text>
+    <text x="10" y="110" font-size="11" fill="#334155">📄 tanggal_pengeluaran : int(11)</text>
+    <text x="10" y="131" font-size="11" font-weight="600" fill="#15803d">#️⃣ id_user : int(11)</text>
+  </g>
+
+  <!-- 2. TB_PEMBAYARAN (Bottom-Left) -->
+  <g transform="translate(40, 430)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="230" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="230" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_pembayaran</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="230" height="185" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_pembayaran : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 total_pembayaran : int(11)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 jml_uang_dibayar : int(11)</text>
+    <text x="10" y="110" font-size="11" fill="#334155">📄 kembalian : int(11)</text>
+    <text x="10" y="131" font-size="11" fill="#334155">📄 tgl_pembayaran : int(11)</text>
+    <text x="10" y="152" font-size="11" fill="#334155">📄 kode_invoice : varchar(100)</text>
+    <text x="10" y="173" font-size="11" font-weight="600" fill="#15803d">#️⃣ id_user : int(11)</text>
+    <text x="10" y="194" font-size="11" font-weight="600" fill="#2563eb">#️⃣ id_outlet : int(11)</text>
+  </g>
+
+  <!-- 3. TB_MENU (Top-Center) -->
+  <g transform="translate(370, 45)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="240" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="240" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_menu</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="240" height="105" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_menu : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 nama_menu : varchar(100)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 harga_menu : int(11)</text>
+    <text x="10" y="110" font-size="11" font-weight="600" fill="#2563eb">#️⃣ id_outlet : int(11)</text>
+  </g>
+
+  <!-- 4. TB_USER (Center - Primary Hub) -->
+  <g transform="translate(370, 320)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="240" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="240" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_user</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="240" height="145" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_user : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 nama_user : varchar(100)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 username : varchar(100)</text>
+    <text x="10" y="110" font-size="11" fill="#334155">📄 password : varchar(255)</text>
+    <text x="10" y="131" font-size="11" fill="#334155">📄 jabatan : enum('admin','kasir')</text>
+    <text x="10" y="152" font-size="11" font-weight="600" fill="#2563eb">#️⃣ id_outlet : int(11)</text>
+  </g>
+
+  <!-- 5. TB_OUTLET (Bottom-Center - Organization Hub) -->
+  <g transform="translate(370, 670)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="240" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="240" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_outlet</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="240" height="105" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_outlet : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 nama_outlet : varchar(100)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 no_telepon_outlet : varchar(20)</text>
+    <text x="10" y="110" font-size="11" fill="#334155">📄 alamat_outlet : text</text>
+  </g>
+
+  <!-- 6. TB_TRANSAKSI (Top-Right) -->
+  <g transform="translate(880, 45)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="345" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="345" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_transaksi</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="345" height="210" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_transaksi : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 kode_invoice : varchar(100)</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 kuantitas : int(11)</text>
+    <text x="10" y="110" font-size="11" fill="#334155">📄 status_bayar : enum('belum_dibayar','sudah_dibayar')</text>
+    <text x="10" y="131" font-size="11" fill="#334155">📄 tgl_transaksi : int(11)</text>
+    <text x="10" y="152" font-size="11" fill="#334155">📄 keterangan : text</text>
+    <text x="10" y="173" font-size="11" font-weight="600" fill="#d97706">#️⃣ id_menu : int(11)</text>
+    <text x="10" y="194" font-size="11" font-weight="600" fill="#15803d">#️⃣ id_user : int(11)</text>
+    <text x="10" y="215" font-size="11" font-weight="600" fill="#2563eb">#️⃣ id_outlet : int(11)</text>
+  </g>
+
+  <!-- 7. TB_LOG_PENGELUARAN (Middle-Right) -->
+  <g transform="translate(880, 420)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="240" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="240" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_log_pengeluaran</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="240" height="105" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_log_pengeluaran : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 keterangan : text</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 tanggal : int(11)</text>
+    <text x="10" y="110" font-size="11" font-weight="600" fill="#15803d">#️⃣ id_user : int(11)</text>
+  </g>
+
+  <!-- 8. TB_LOG (Bottom-Right) -->
+  <g transform="translate(880, 640)" filter="url(#card-shadow)">
+    <!-- Header -->
+    <rect x="0" y="0" width="240" height="28" rx="5" fill="#3b82f6"/>
+    <rect x="0" y="24" width="240" height="4" fill="#3b82f6"/>
+    <text x="8" y="19" font-size="11" font-weight="bold" fill="#ffffff">🗄️ telagarizqy21 tb_log</text>
+    <!-- Body -->
+    <rect x="0" y="28" width="240" height="105" rx="0" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <!-- Rows -->
+    <text x="10" y="47" font-size="11" font-weight="bold" fill="#b45309">🔑 id_log : int(11)</text>
+    <text x="10" y="68" font-size="11" fill="#334155">📄 isi_log : text</text>
+    <text x="10" y="89" font-size="11" fill="#334155">📄 tanggal_log : int(11)</text>
+    <text x="10" y="110" font-size="11" font-weight="600" fill="#15803d">#️⃣ id_user : int(11)</text>
+  </g>
+
+  <!-- ==================== CAPTION DI BAWAH ==================== -->
+  <text x="640" y="930" text-anchor="middle" font-size="14" font-weight="bold" fill="#0f172a">
+    Gambar 28. Desain Tabel Relasi (Sumber: Penulis, 2024)
+  </text>
+  <text x="640" y="952" text-anchor="middle" font-size="11" fill="#475569">
+    Relasi Database Sistem Informasi Pengolahan Data Transaksi Keuangan Telaga Rizqy 21
+  </text>
+</svg>

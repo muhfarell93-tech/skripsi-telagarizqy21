@@ -31,6 +31,7 @@ class Transaksi extends Model
         'waktu_lunas',
         'url_bukti_bayar',
         'stok_dikurangi',
+        'is_demo',
     ];
 
     protected $casts = [
@@ -42,6 +43,7 @@ class Transaksi extends Model
         'total_bayar'       => 'decimal:2',
         'kembalian'         => 'decimal:2',
         'stok_dikurangi'    => 'boolean',
+        'is_demo'           => 'boolean',
     ];
 
     public function outlet()

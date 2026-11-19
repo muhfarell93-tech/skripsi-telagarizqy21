@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\KategoriProduk;
 use App\Models\LogAktivitas;
+use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
@@ -13,6 +14,7 @@ class ProdukController extends Controller
     public function index()
     {
         $produks = Produk::with(['kategori', 'outlet'])
+            ->where('outlet_id', Auth::user()->outlet_id)
             ->orderBy('nama_produk', 'asc')
             ->get();
         $kategoris = KategoriProduk::all();
@@ -44,6 +46,7 @@ class ProdukController extends Controller
 
     public function update(Request $request, Produk $produk)
     {
+        abort_unless($produk->outlet_id === Auth::user()->outlet_id, 404);
         $validated = $request->validate([
             'kode_produk'  => 'required|string|max:30|unique:produks,kode_produk,' . $produk->id,
             'kategori_id'  => 'required|exists:kategori_produks,id',
@@ -64,6 +67,10 @@ class ProdukController extends Controller
 
     public function destroy(Produk $produk)
     {
+        abort_unless($produk->outlet_id === Auth::user()->outlet_id, 404);
+        if (DetailTransaksi::where('produk_id', $produk->id)->exists()) {
+            return back()->with('error', 'Produk sudah tercatat dalam transaksi dan tidak dapat dihapus. Atur stok menjadi nol untuk menghentikan penjualan.');
+        }
         $nama = $produk->nama_produk;
         $produk->delete();
 

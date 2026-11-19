@@ -1,0 +1,299 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1140" width="1440" height="1140" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <!-- Soft shadow -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <filter id="actor-shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.15"/>
+    </filter>
+
+    <!-- Arrow Marker for Include / Extend -->
+    <marker id="arrow-dashed" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect x="0" y="0" width="1440" height="1140" fill="#f8fafc"/>
+  <rect x="15" y="15" width="1410" height="1110" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" rx="10"/>
+
+  <!-- Top Title -->
+  <text x="720" y="45" text-anchor="middle" font-size="16" font-weight="bold" fill="#0f172a">
+    USE CASE DIAGRAM SISTEM INFORMASI TRANSAKSI KEUANGAN
+  </text>
+  <text x="720" y="66" text-anchor="middle" font-size="12" fill="#64748b">
+    Peternakan dan Pengolahan Susu Kambing Telaga Rizqy 21 Metro, Lampung
+  </text>
+
+
+  <!-- ==================== SYSTEM BOUNDARY BOX ==================== -->
+  <rect x="230" y="90" width="980" height="980" rx="16" fill="#ffffff" stroke="#3b82f6" stroke-width="2" stroke-dasharray="8 4"/>
+  <rect x="230" y="90" width="980" height="38" rx="16" fill="#eff6ff"/>
+  <rect x="230" y="112" width="980" height="16" fill="#eff6ff"/>
+  <text x="720" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e40af">
+    Sistem Informasi Pengolahan Data Transaksi Keuangan Berbasis Web (Telaga Rizqy 21)
+  </text>
+
+
+  <!-- ========================================================================= -->
+  <!-- ASSOCIATION LINES                                                         -->
+  <!-- ========================================================================= -->
+
+  <!-- Lines from ADMIN (x:140, y:480) -->
+  <!-- 1. to Login (x:450, y:155) -->
+  <line x1="140" y1="460" x2="350" y2="165" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 2. to Produk (x:420, y:235) -->
+  <line x1="140" y1="470" x2="330" y2="240" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 3. to User/Kasir (x:420, y:315) -->
+  <line x1="140" y1="480" x2="320" y2="315" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 4. to Outlet (x:420, y:395) -->
+  <line x1="140" y1="490" x2="330" y2="395" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 5. to Pengeluaran (x:420, y:475) -->
+  <line x1="140" y1="500" x2="330" y2="475" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 6. to Pemasukan Lain (x:420, y:555) -->
+  <line x1="140" y1="510" x2="330" y2="555" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 7. to Dasbor (x:420, y:635) -->
+  <line x1="140" y1="520" x2="330" y2="635" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 8. to Laporan (x:420, y:715) -->
+  <line x1="140" y1="530" x2="330" y2="715" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 9. to Riwayat Trx (x:720, y:815) -->
+  <line x1="140" y1="540" x2="620" y2="800" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 10. to Log (x:420, y:885) -->
+  <line x1="140" y1="550" x2="340" y2="885" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 11. to Logout (x:720, y:1020) -->
+  <line x1="140" y1="560" x2="620" y2="1010" stroke="#1e293b" stroke-width="1.3"/>
+
+  <!-- Lines from KASIR (x:1300, y:350) -->
+  <!-- 1. to Login (x:450, y:155) -->
+  <line x1="1300" y1="330" x2="570" y2="165" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 2. to Olah Transaksi POS (x:880, y:315) -->
+  <line x1="1300" y1="350" x2="1000" y2="315" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 3. to Cetak Struk (x:880, y:635) -->
+  <line x1="1300" y1="370" x2="990" y2="635" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 4. to Riwayat Trx (x:720, y:815) -->
+  <line x1="1300" y1="390" x2="820" y2="800" stroke="#1e293b" stroke-width="1.3"/>
+  <!-- 5. to Logout (x:720, y:1020) -->
+  <line x1="1300" y1="410" x2="820" y2="1010" stroke="#1e293b" stroke-width="1.3"/>
+
+  <!-- Lines from PAYMENT GATEWAY MIDTRANS (x:1300, y:770) -->
+  <!-- 1. to Pembayaran QRIS Online (x:1030, y:510) -->
+  <line x1="1300" y1="760" x2="1120" y2="525" stroke="#dc2626" stroke-width="1.5"/>
+  <!-- 2. to Verifikasi Webhook QRIS (x:950, y:725) -->
+  <line x1="1300" y1="780" x2="1050" y2="725" stroke="#dc2626" stroke-width="1.5"/>
+
+
+  <!-- ========================================================================= -->
+  <!-- INCLUDE / EXTEND RELATIONS (Dashed Lines)                                -->
+  <!-- ========================================================================= -->
+
+  <!-- POS -> Pilih Menu (<<include>>) -->
+  <path d="M 880 290 L 880 250" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="885" y="270" font-size="9" font-style="italic" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- POS -> Proses Bayar (<<include>>) -->
+  <path d="M 880 340 L 880 405" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="885" y="375" font-size="9" font-style="italic" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- Proses Bayar -> Bayar Tunai (<<extend>>) -->
+  <path d="M 800 440 L 760 485" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="735" y="460" font-size="8.5" font-style="italic" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- Proses Bayar -> Bayar QRIS (<<extend>>) -->
+  <path d="M 960 440 L 1000 485" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="990" y="460" font-size="8.5" font-style="italic" fill="#475569">&lt;&lt;extend&gt;&gt;</text>
+
+  <!-- Bayar QRIS -> Verifikasi Webhook (<<include>>) -->
+  <path d="M 1030 535 L 970 700" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="1015" y="620" font-size="8.5" font-style="italic" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+  <!-- POS -> Cetak Struk (<<include>>) -->
+  <path d="M 880 340 L 880 610" fill="none" stroke="#475569" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#arrow-dashed)"/>
+  <text x="830" y="580" font-size="8.5" font-style="italic" fill="#475569">&lt;&lt;include&gt;&gt;</text>
+
+
+  <!-- ========================================================================= -->
+  <!-- USE CASE OVALS                                                            -->
+  <!-- ========================================================================= -->
+
+  <!-- UC 1: Login Sistem (Shared Top) -->
+  <g transform="translate(460, 165)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1e3a8a">Login Sistem</text>
+  </g>
+
+  <!-- UC 2: Mengelola Data Produk (Admin) -->
+  <g transform="translate(440, 240)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mengelola Data Produk</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">&amp; Kategori Olahan Susu</text>
+  </g>
+
+  <!-- UC 3: Mengelola Pengguna Kasir (Admin) -->
+  <g transform="translate(430, 315)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mengelola Akun Kasir</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">&amp; Hak Akses Pengguna</text>
+  </g>
+
+  <!-- UC 4: Mengelola Profil Outlet (Admin) -->
+  <g transform="translate(440, 395)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mengelola Profil Outlet</text>
+  </g>
+
+  <!-- UC 5: Mencatat Pengeluaran Operasional (Admin) -->
+  <g transform="translate(440, 475)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mencatat Pengeluaran</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">Operasional &amp; Beban Usaha</text>
+  </g>
+
+  <!-- UC 6: Mencatat Pemasukan Lain (Admin) -->
+  <g transform="translate(440, 555)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mencatat Pemasukan Lain</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">(Pendapatan Non-Kasir)</text>
+  </g>
+
+  <!-- UC 7: Dasbor Finansial & Grafik (Admin) -->
+  <g transform="translate(440, 635)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Melihat Dasbor Finansial</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">&amp; Grafik Tren Omzet</text>
+  </g>
+
+  <!-- UC 8: Cetak Laporan Keuangan (Admin) -->
+  <g transform="translate(440, 715)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Mencetak Laporan</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9.5" fill="#64748b">Keuangan &amp; Laba Rugi</text>
+  </g>
+
+  <!-- UC 9: Memproses Transaksi Penjualan POS (Kasir Primary) -->
+  <g transform="translate(880, 315)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="120" ry="28" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#166534">Memproses Transaksi</text>
+    <text x="0" y="12" text-anchor="middle" font-size="10" fill="#15803d">Penjualan Kasir (POS)</text>
+  </g>
+
+  <!-- Sub-UC: Memilih Menu Produk (Included) -->
+  <g transform="translate(880, 225)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="95" ry="22" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+    <text x="0" y="4" text-anchor="middle" font-size="10.5" fill="#334155">Memilih Varian Susu</text>
+  </g>
+
+  <!-- Sub-UC: Memproses Pembayaran (Included) -->
+  <g transform="translate(880, 425)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="100" ry="24" fill="#ffffff" stroke="#64748b" stroke-width="1.2"/>
+    <text x="0" y="4" text-anchor="middle" font-size="10.5" font-weight="600" fill="#334155">Memproses Pembayaran</text>
+  </g>
+
+  <!-- Branch: Pembayaran Tunai (Extended) -->
+  <g transform="translate(730, 510)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="85" ry="22" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+    <text x="0" y="4" text-anchor="middle" font-size="10" fill="#047857">Pembayaran Tunai</text>
+  </g>
+
+  <!-- Branch: Pembayaran QRIS (Extended) -->
+  <g transform="translate(1030, 510)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="95" ry="24" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.4"/>
+    <text x="0" y="-1" text-anchor="middle" font-size="10.5" font-weight="600" fill="#7e22ce">Pembayaran QRIS</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9" fill="#9333ea">(Midtrans Online)</text>
+  </g>
+
+  <!-- Sub-UC: Verifikasi Pembayaran QRIS Webhook -->
+  <g transform="translate(950, 725)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="100" ry="24" fill="#fff1f2" stroke="#e11d48" stroke-width="1.4"/>
+    <text x="0" y="-1" text-anchor="middle" font-size="10.5" font-weight="600" fill="#be123c">Verifikasi Otomatis</text>
+    <text x="0" y="11" text-anchor="middle" font-size="9" fill="#e11d48">Pembayaran QRIS</text>
+  </g>
+
+  <!-- Sub-UC: Mencetak Struk Pembayaran (Included) -->
+  <g transform="translate(880, 635)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">Mencetak Struk Penjualan</text>
+  </g>
+
+  <!-- UC: Melihat Riwayat Transaksi (Shared Admin & Kasir) -->
+  <g transform="translate(720, 815)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="#1e3a8a">Melihat Riwayat Transaksi</text>
+  </g>
+
+  <!-- UC: Melihat Log Aktivitas Sistem (Admin) -->
+  <g transform="translate(440, 885)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="110" ry="25" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Melihat Log Aktivitas</text>
+  </g>
+
+  <!-- UC: Logout Sistem (Shared Bottom) -->
+  <g transform="translate(720, 1015)" filter="url(#shadow)">
+    <ellipse cx="0" cy="0" rx="105" ry="24" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="600" fill="#334155">Logout Sistem</text>
+  </g>
+
+
+  <!-- ========================================================================= -->
+  <!-- ACTOR 1: ADMIN (Kiri)                                                     -->
+  <!-- ========================================================================= -->
+  <g transform="translate(130, 470)" filter="url(#actor-shadow)">
+    <!-- Head -->
+    <circle cx="0" cy="-35" r="16" fill="#3b82f6" stroke="#1e293b" stroke-width="1.8"/>
+    <!-- Body -->
+    <line x1="0" y1="-19" x2="0" y2="18" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Arms -->
+    <line x1="-24" y1="-5" x2="24" y2="-5" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Left Leg -->
+    <line x1="0" y1="18" x2="-18" y2="48" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Right Leg -->
+    <line x1="0" y1="18" x2="18" y2="48" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Label -->
+    <rect x="-55" y="58" width="110" height="24" rx="6" fill="#1e40af"/>
+    <text x="0" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">Admin</text>
+    <text x="0" y="94" text-anchor="middle" font-size="10" fill="#475569">(Pemilik / Manajer)</text>
+  </g>
+
+
+  <!-- ========================================================================= -->
+  <!-- ACTOR 2: KASIR (Kanan Atas)                                              -->
+  <!-- ========================================================================= -->
+  <g transform="translate(1310, 340)" filter="url(#actor-shadow)">
+    <!-- Head -->
+    <circle cx="0" cy="-35" r="16" fill="#10b981" stroke="#1e293b" stroke-width="1.8"/>
+    <!-- Body -->
+    <line x1="0" y1="-19" x2="0" y2="18" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Arms -->
+    <line x1="-24" y1="-5" x2="24" y2="-5" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Left Leg -->
+    <line x1="0" y1="18" x2="-18" y2="48" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Right Leg -->
+    <line x1="0" y1="18" x2="18" y2="48" stroke="#1e293b" stroke-width="2.5"/>
+    <!-- Label -->
+    <rect x="-55" y="58" width="110" height="24" rx="6" fill="#047857"/>
+    <text x="0" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="#ffffff">Kasir</text>
+    <text x="0" y="94" text-anchor="middle" font-size="10" fill="#475569">(Staf Pelayanan POS)</text>
+  </g>
+
+
+  <!-- ========================================================================= -->
+  <!-- ACTOR 3: PAYMENT GATEWAY (Kanan Bawah - External System)                  -->
+  <!-- ========================================================================= -->
+  <g transform="translate(1310, 770)" filter="url(#actor-shadow)">
+    <!-- Server Box Icon for System Actor -->
+    <rect x="-35" y="-35" width="70" height="65" rx="8" fill="#f43f5e" stroke="#1e293b" stroke-width="1.8"/>
+    <line x1="-25" y1="-16" x2="25" y2="-16" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-25" y1="2" x2="25" y2="2" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="18" cy="18" r="3.5" fill="#86efac"/>
+    <circle cx="7" cy="18" r="3.5" fill="#fef08a"/>
+    <!-- Label -->
+    <rect x="-65" y="40" width="130" height="34" rx="6" fill="#be123c"/>
+    <text x="0" y="54" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#ffffff">&lt;&lt;System Actor&gt;&gt;</text>
+    <text x="0" y="68" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">Midtrans / QRIS</text>
+  </g>
+
+  <!-- ==================== CAPTION DI BAWAH ==================== -->
+  <text x="720" y="1105" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">
+    Gambar: Use Case Diagram Sistem Informasi Pengolahan Data Transaksi Keuangan Telaga Rizqy 21
+  </text>
+</svg>

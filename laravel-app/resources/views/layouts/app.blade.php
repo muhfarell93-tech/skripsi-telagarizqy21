@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'Sistem Pengolahan Data Transaksi Keuangan Berbasis Web') - Telaga Rizqy 21</title>
-  <!-- Tailwind CSS & FontAwesome -->
+  <!-- Bootstrap 5, existing Tailwind utilities, icons, and Chart.js -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Chart.js for Animated Visualizations -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.6.1/dist/chart.umd.min.js"></script>
   
   <style>
     /* =========================================================
@@ -21,6 +21,21 @@
       --primary-shadow: rgba(37, 99, 235, 0.25);
       --transition-standard: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       --transition-fast: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .app-sidebar { --bs-offcanvas-width: 270px; background: #fff; border-right: 1px solid #dbe4ef; }
+    .sidebar-brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; background: #e7f1fb; color: #153b66; }
+    .sidebar-link { display: flex; align-items: center; gap: .75rem; padding: .7rem .85rem; margin: .12rem 0; border-radius: .7rem; color: #52647a; text-decoration: none; font-size: .875rem; font-weight: 600; transition: background-color .16s ease,color .16s ease; }
+    .sidebar-link:hover, .sidebar-link.active { color: #153b66; background: #edf5fc; }
+    .app-topbar { min-height: 64px; }
+    @media (min-width: 992px) {
+      .app-sidebar { position: fixed !important; inset: 0 auto 0 0 !important; z-index: 45 !important; width: 270px !important; visibility: visible !important; transform: none !important; }
+      .app-topbar, .app-flash-wrap, main, footer { margin-left: 270px !important; }
+      main { max-width: calc(100% - 270px) !important; }
+    }
+    @media (max-width: 991.98px) {
+      .app-sidebar .offcanvas-header { border-bottom: 1px solid #e7edf4; }
+      .app-sidebar .sidebar-nav { padding: 1rem; }
     }
 
     /* ---------------------------------------------------------
@@ -440,66 +455,175 @@
 
   <!-- Topbar Navigation -->
   <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- Brand Logo -->
-      <a href="{{ route($homeRoute) }}" class="flex items-center space-x-3 group">
+      <a href="{{ route($homeRoute) }}" class="flex items-center space-x-3 group flex-shrink-0">
         <div class="w-10 h-10 rounded-xl bg-blue-600 group-hover:bg-blue-700 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/20 group-hover:scale-105 transition">
           <i class="fa-solid fa-bottle-droplet text-lg"></i>
         </div>
         <div>
           <span class="text-base font-extrabold text-slate-900 tracking-tight block leading-tight group-hover:text-blue-600 transition">TELAGA RIZQY 21</span>
-          <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wider block">Transaksi Keuangan Berbasis Web</span>
+          <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wider block">Susu Kambing Metro</span>
         </div>
       </a>
 
-      <!-- Menu Navigation -->
-      <div class="hidden md:flex items-center space-x-1">
-        @if($currentUser && $currentUser->role === 'admin')
-          <a href="{{ route('dashboard') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard
-          </a>
-        @endif
-        @if($currentUser && in_array($currentUser->role, ['admin', 'kasir'], true))
-          <a href="{{ route('pos.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('pos.*') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-cash-register mr-1.5"></i> Kasir (POS)
-          </a>
-          <a href="{{ route('transaksi.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('transaksi.*') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-clock-rotate-left mr-1.5"></i> Riwayat Transaksi
-          </a>
-        @endif
-        @if($currentUser && $currentUser->role === 'admin')
-          <a href="{{ route('produk.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('produk.*') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-box mr-1.5"></i> Produk &amp; Stok
-          </a>
-          <a href="{{ route('pengeluaran.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('pengeluaran.*') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-money-bill-transfer mr-1.5"></i> Pengeluaran
-          </a>
-          <a href="{{ route('laporan.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition btn-interactive {{ request()->routeIs('laporan.*') ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-            <i class="fa-solid fa-file-invoice-dollar mr-1.5"></i> Laporan Keuangan
-          </a>
-        @endif
-      </div>
-
-      <!-- User Profile & Logout -->
-      <div class="flex items-center space-x-3">
-        <div class="text-right hidden sm:block">
-          <div class="text-xs font-bold text-slate-900">{{ $currentUser->name ?? 'User' }}</div>
-          <div class="text-[10px] font-semibold text-emerald-600 uppercase">{{ $currentUser->role ?? 'kasir' }}</div>
+      <!-- Navigation Links (Desktop) -->
+      @if($currentUser)
+        <div class="hidden lg:flex items-center space-x-1 py-1">
+          @if($currentUser->role === 'admin')
+            <a href="{{ route('dashboard') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="{{ route('pos.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('pos.*') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-cash-register"></i> Kasir POS
+            </a>
+            <a href="{{ route('pemasukan.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('pemasukan.*') ? 'bg-emerald-50 text-emerald-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-arrow-trend-up text-emerald-600"></i> Pemasukan
+            </a>
+            <a href="{{ route('pengeluaran.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('pengeluaran.*') ? 'bg-red-50 text-red-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-arrow-trend-down text-red-600"></i> Pengeluaran
+            </a>
+            <a href="{{ route('laporan.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('laporan.*') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-file-invoice-dollar"></i> Laporan
+            </a>
+            <a href="{{ route('produk.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('produk.*') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-boxes-stacked"></i> Produk
+            </a>
+            <a href="{{ route('transaksi.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('transaksi.*') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-clock-rotate-left"></i> Transaksi
+            </a>
+            <a href="{{ route('pembayaran.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('pembayaran.*') ? 'bg-purple-50 text-purple-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-qrcode text-purple-600"></i> QRIS
+            </a>
+            <a href="{{ route('kasir.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('kasir.*') ? 'bg-indigo-50 text-indigo-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-users-gear text-indigo-600"></i> Kasir
+            </a>
+            <a href="{{ route('diagram.index') }}" class="px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 {{ request()->routeIs('diagram.*') ? 'bg-amber-50 text-amber-900 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-diagram-project text-amber-600"></i> Diagram
+            </a>
+          @else
+            <!-- Kasir Navigation -->
+            <a href="{{ route('pos.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 {{ request()->routeIs('pos.*') ? 'bg-blue-600 text-white font-black shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-cash-register"></i> Mesin Kasir (POS)
+            </a>
+            <a href="{{ route('transaksi.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 {{ request()->routeIs('transaksi.*') ? 'bg-blue-50 text-blue-700 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-clock-rotate-left"></i> Riwayat Transaksi Saya
+            </a>
+            <a href="{{ route('diagram.index') }}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 {{ request()->routeIs('diagram.*') ? 'bg-amber-50 text-amber-900 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+              <i class="fa-solid fa-diagram-project text-amber-600"></i> Diagram
+            </a>
+          @endif
         </div>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition btn-interactive" title="Logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      @endif
+
+      <!-- User Profile, Shortcut Ganti Peran, Mobile Hamburger & Logout -->
+      <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+        @if($currentUser)
+          <!-- Shortcut Cepat Ganti Peran (Admin <-> Kasir) -->
+          @if($currentUser->role === 'kasir')
+            <a href="{{ route('demo.switch-role', 'admin') }}" title="Klik untuk beralih cepat ke akun ADMIN (Buka Laporan & Dashboard)"
+              class="btn-interactive inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 text-xs font-bold transition shadow-sm">
+              <i class="fa-solid fa-crown text-indigo-600"></i>
+              <span>Ke Admin</span>
+            </a>
+          @else
+            <a href="{{ route('demo.switch-role', 'kasir') }}" title="Klik untuk beralih cepat ke akun KASIR (Buka Mesin POS)"
+              class="btn-interactive inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition shadow-sm">
+              <i class="fa-solid fa-cash-register text-amber-600"></i>
+              <span>Ke Kasir</span>
+            </a>
+          @endif
+
+          <div class="text-right hidden sm:block">
+            <div class="text-xs font-bold text-slate-900">{{ $currentUser->name }}</div>
+            <div class="text-[10px] font-semibold text-blue-600 uppercase">{{ $currentUser->role }}</div>
+          </div>
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition btn-interactive" title="Logout">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </button>
+          </form>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button type="button" onclick="document.getElementById('mobileNavMenu').classList.toggle('hidden')" class="lg:hidden p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition" title="Menu">
+            <i class="fa-solid fa-bars text-base"></i>
           </button>
-        </form>
+        @else
+          <a href="{{ route('login') }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition">
+            Masuk
+          </a>
+        @endif
       </div>
 
     </div>
+
+    <!-- Mobile Navigation Drawer -->
+    @if($currentUser)
+      <div id="mobileNavMenu" class="hidden lg:hidden border-t border-slate-100 bg-white px-4 py-3 space-y-1 shadow-lg">
+        <!-- Mobile Switch Shortcut -->
+        <div class="pb-2 mb-1 border-b border-slate-100">
+          @if($currentUser->role === 'kasir')
+            <a href="{{ route('demo.switch-role', 'admin') }}" class="flex items-center justify-between p-2.5 rounded-xl bg-indigo-50 text-indigo-800 text-xs font-bold">
+              <span><i class="fa-solid fa-crown mr-2 text-indigo-600"></i> Beralih ke Admin (Laporan &amp; Data)</span>
+              <span class="text-[10px] bg-indigo-200 px-2 py-0.5 rounded-md">1 Klik</span>
+            </a>
+          @else
+            <a href="{{ route('demo.switch-role', 'kasir') }}" class="flex items-center justify-between p-2.5 rounded-xl bg-amber-50 text-amber-800 text-xs font-bold">
+              <span><i class="fa-solid fa-cash-register mr-2 text-amber-600"></i> Beralih ke Kasir (Mesin POS)</span>
+              <span class="text-[10px] bg-amber-200 px-2 py-0.5 rounded-md">1 Klik</span>
+            </a>
+          @endif
+        </div>
+        @if($currentUser->role === 'admin')
+          <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-chart-pie mr-2"></i> Dashboard
+          </a>
+          <a href="{{ route('pos.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('pos.*') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-cash-register mr-2"></i> Kasir POS
+          </a>
+          <a href="{{ route('pemasukan.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('pemasukan.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-arrow-trend-up text-emerald-600 mr-2"></i> Pemasukan
+          </a>
+          <a href="{{ route('pengeluaran.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('pengeluaran.*') ? 'bg-red-50 text-red-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-arrow-trend-down text-red-600 mr-2"></i> Pengeluaran
+          </a>
+          <a href="{{ route('laporan.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('laporan.*') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-file-invoice-dollar mr-2"></i> Laporan Keuangan
+          </a>
+          <a href="{{ route('produk.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('produk.*') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-boxes-stacked mr-2"></i> Produk &amp; Stok
+          </a>
+          <a href="{{ route('transaksi.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('transaksi.*') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-clock-rotate-left mr-2"></i> Riwayat Transaksi
+          </a>
+          <a href="{{ route('pembayaran.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('pembayaran.*') ? 'bg-purple-50 text-purple-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-qrcode text-purple-600 mr-2"></i> Pemantauan QRIS
+          </a>
+          <a href="{{ route('kasir.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('kasir.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-users-gear text-indigo-600 mr-2"></i> Kelola Akun Kasir
+          </a>
+          <a href="{{ route('diagram.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('diagram.*') ? 'bg-amber-50 text-amber-900' : 'text-slate-600' }}">
+            <i class="fa-solid fa-diagram-project text-amber-600 mr-2"></i> Diagram Sistem &amp; Relasi
+          </a>
+        @else
+          <a href="{{ route('pos.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('pos.*') ? 'bg-blue-600 text-white' : 'text-slate-600' }}">
+            <i class="fa-solid fa-cash-register mr-2"></i> Mesin Kasir (POS)
+          </a>
+          <a href="{{ route('transaksi.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('transaksi.*') ? 'bg-blue-50 text-blue-700' : 'text-slate-600' }}">
+            <i class="fa-solid fa-clock-rotate-left mr-2"></i> Riwayat Transaksi Saya
+          </a>
+          <a href="{{ route('diagram.index') }}" class="block px-3 py-2 rounded-xl text-xs font-bold {{ request()->routeIs('diagram.*') ? 'bg-amber-50 text-amber-900' : 'text-slate-600' }}">
+            <i class="fa-solid fa-diagram-project text-amber-600 mr-2"></i> Diagram Sistem &amp; Relasi
+          </a>
+        @endif
+      </div>
+    @endif
   </nav>
 
   <!-- Flash Notification -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 w-full no-print">
+  <div class="app-flash-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 w-full no-print">
     @if(session('success'))
       <div class="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-semibold flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-emerald-600"></i> {{ session('success') }}</div>
@@ -523,6 +647,7 @@
   </footer>
 
   <!-- Micro-interactions & Page Transition Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
   <script>
     // 1. Global Ripple Effect
     document.addEventListener('click', function(e) {

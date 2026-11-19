@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#F2EBE1" stop-opacity="0.4"/>
+    </radialGradient>
+    <linearGradient id="cupGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.7"/>
+      <stop offset="20%" stop-color="#FFFFFF" stop-opacity="0.2"/>
+      <stop offset="80%" stop-color="#FFFFFF" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="liquidGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#3B1E16"/>
+      <stop offset="45%" stop-color="#5C2D1E"/>
+      <stop offset="85%" stop-color="#9E5B3D"/>
+      <stop offset="100%" stop-color="#FFFDF9"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#3A1C14" flood-opacity="0.18"/>
+    </filter>
+    <filter id="iceGlow">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#FFFFFF" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Circular Backdrop -->
+  <circle cx="150" cy="150" r="130" fill="url(#bgGrad)"/>
+  
+  <!-- Base Shadow -->
+  <ellipse cx="150" cy="265" rx="65" ry="14" fill="#2E1B15" opacity="0.16"/>
+  <ellipse cx="150" cy="264" rx="42" ry="7" fill="#2E1B15" opacity="0.22"/>
+
+  <!-- Main Cup Group with Filter -->
+  <g filter="url(#softShadow)">
+    <!-- Cup Body (Tapered Plastic Cup) -->
+    <path d="M 85 85 L 105 250 C 106 256, 115 260, 150 260 C 185 260, 194 256, 195 250 L 215 85 Z" fill="url(#liquidGrad)"/>
+    
+    <!-- Liquid Layers / Swirl Effect -->
+    <path d="M 92 140 Q 150 160 208 140 L 200 200 Q 150 220 100 200 Z" fill="#6B3828" opacity="0.35"/>
+    <path d="M 98 185 Q 150 205 202 185 L 195 248 Q 150 258 105 248 Z" fill="#3B1E16" opacity="0.85"/>
+    
+    <!-- Ice Cubes floating -->
+    <rect x="115" y="100" width="32" height="28" rx="6" fill="#FFFFFF" opacity="0.75" transform="rotate(12 131 114)" filter="url(#iceGlow)"/>
+    <rect x="155" y="95" width="28" height="26" rx="5" fill="#FFFFFF" opacity="0.65" transform="rotate(-15 169 108)" filter="url(#iceGlow)"/>
+    <rect x="135" y="125" width="30" height="26" rx="5" fill="#FFFFFF" opacity="0.7" transform="rotate(8 150 138)" filter="url(#iceGlow)"/>
+
+    <!-- Plastic Cup Specular Highlight -->
+    <path d="M 85 85 L 105 250 C 106 256, 115 260, 150 260 C 185 260, 194 256, 195 250 L 215 85 Z" fill="url(#cupGrad)"/>
+    <path d="M 96 95 L 112 245" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+    <path d="M 104 95 L 117 240" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+
+    <!-- Cup Rim / Lid -->
+    <ellipse cx="150" cy="85" rx="65" ry="12" fill="#FFFFFF" opacity="0.85"/>
+    <ellipse cx="150" cy="83" rx="67" ry="10" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.95"/>
+    <ellipse cx="150" cy="83" rx="60" ry="8" fill="#F8F3ED" opacity="0.9"/>
+    
+    <!-- Foam / Powder on Top -->
+    <ellipse cx="150" cy="84" rx="52" ry="7" fill="#9E5B3D"/>
+    <circle cx="140" cy="83" r="12" fill="#3B1E16" opacity="0.35"/>
+    <circle cx="158" cy="84" r="10" fill="#3B1E16" opacity="0.45"/>
+    <circle cx="150" cy="82" r="14" fill="#6B3828" opacity="0.3"/>
+
+    <!-- Brand Heart / Emblem (Similar to Kopi Kenangan logo on cups) -->
+    <g transform="translate(150, 175) scale(0.65)">
+      <circle cx="0" cy="0" r="28" fill="#FFFFFF" opacity="0.9"/>
+      <path d="M 0 -10 C -12 -25, -30 -10, 0 16 C 30 -10, 12 -25, 0 -10 Z" fill="#8B2635"/>
+      <path d="M -7 -8 C -12 -3, -10 5, -2 8" stroke="#FFFFFF" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8"/>
+    </g>
+  </g>
+</svg>

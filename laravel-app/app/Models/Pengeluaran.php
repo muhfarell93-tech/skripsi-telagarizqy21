@@ -19,11 +19,13 @@ class Pengeluaran extends Model
         'keterangan',
         'nominal',
         'tanggal_pengeluaran',
+        'is_demo',
     ];
 
     protected $casts = [
         'nominal'             => 'decimal:2',
         'tanggal_pengeluaran' => 'datetime',
+        'is_demo' => 'boolean',
     ];
 
     public function outlet()

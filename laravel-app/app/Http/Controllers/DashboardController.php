@@ -6,78 +6,95 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Produk;
 use App\Models\Pengeluaran;
+use App\Models\PemasukanManual;
+use App\Models\LogAktivitas;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->role === 'kasir') {
+            return redirect()->route('pos.index');
+        }
+
+        $outletId = auth()->user()->outlet_id ?? 1;
         $today = Carbon::today();
-        $thisMonth = Carbon::now()->startOfMonth();
+        $monthStart = Carbon::now()->startOfMonth();
+        $yearStart = Carbon::now()->startOfYear();
+        $includeDemo = app()->environment(['local', 'testing']);
 
-        // 1. Ringkasan Finansial Hari Ini
-        $omzetHariIni = Transaksi::where('status_pembayaran', 'lunas')
-            ->whereDate('tanggal_transaksi', $today)
-            ->sum('total_harga');
+        $sales = Transaksi::query()->where('outlet_id', $outletId)->where('status_pembayaran', 'lunas')
+            ->when(!$includeDemo, fn ($query) => $query->where('is_demo', false));
+        $manualIncome = PemasukanManual::query()->where('outlet_id', $outletId)
+            ->when(!$includeDemo, fn ($query) => $query->where('is_demo', false));
+        $expenses = Pengeluaran::query()->where('outlet_id', $outletId)
+            ->when(!$includeDemo, fn ($query) => $query->where('is_demo', false));
+        $transactions = Transaksi::query()->where('outlet_id', $outletId)
+            ->when(!$includeDemo, fn ($query) => $query->where('is_demo', false));
 
-        $transaksiHariIni = Transaksi::where('status_pembayaran', 'lunas')
-            ->whereDate('tanggal_transaksi', $today)
-            ->count();
+        $pendapatanPenjualan = (clone $sales)->sum('total_harga');
+        $pendapatanLain = (clone $manualIncome)->sum('nominal');
+        $totalPemasukan = $pendapatanPenjualan + $pendapatanLain;
+        $totalPengeluaran = (clone $expenses)->sum('nominal');
+        $saldoKeuangan = $totalPemasukan - $totalPengeluaran;
 
-        // 2. Ringkasan Finansial Bulan Ini
-        $omzetBulanIni = Transaksi::where('status_pembayaran', 'lunas')
-            ->where('tanggal_transaksi', '>=', $thisMonth)
-            ->sum('total_harga');
+        $omzetHariIni = (clone $sales)->whereDate('tanggal_transaksi', $today)->sum('total_harga');
+        $transaksiHariIni = (clone $sales)->whereDate('tanggal_transaksi', $today)->count();
+        $omzetBulanIni = (clone $sales)->where('tanggal_transaksi', '>=', $monthStart)->sum('total_harga');
+        $pemasukanLainBulanIni = (clone $manualIncome)->where('tanggal_pemasukan', '>=', $monthStart)->sum('nominal');
+        $pengeluaranBulanIni = (clone $expenses)->where('tanggal_pengeluaran', '>=', $monthStart)->sum('nominal');
+        $labaKotorBulanIni = $omzetBulanIni + $pemasukanLainBulanIni - $pengeluaranBulanIni;
 
-        $pengeluaranBulanIni = Pengeluaran::where('tanggal_pengeluaran', '>=', $thisMonth)
-            ->sum('nominal');
+        $totalTransaksi = (clone $transactions)->count();
+        $totalTransaksiLunas = (clone $transactions)->where('status_pembayaran', 'lunas')->count();
+        $totalPending = (clone $transactions)->where('status_pembayaran', 'belum_lunas')->count();
+        $totalProduk = Produk::where('outlet_id', $outletId)->count();
+        $stokMenipis = Produk::where('outlet_id', $outletId)->whereColumn('stok', '<=', 'stok_minimum')->orderBy('stok')->take(8)->get();
+        $transaksiTerbaru = (clone $transactions)->with(['user', 'details.produk'])
+            ->latest('tanggal_transaksi')->take(8)->get();
+        $aktivitasTerbaru = LogAktivitas::with('user')->whereHas('user', fn ($query) => $query->where('outlet_id', $outletId))
+            ->latest('waktu')->take(8)->get();
 
-        $labaKotorBulanIni = $omzetBulanIni - $pengeluaranBulanIni;
-
-        // 3. Peringatan Stok Produk Menipis (<= stok_minimum)
-        $stokMenipis = Produk::whereColumn('stok', '<=', 'stok_minimum')
-            ->orderBy('stok', 'asc')
-            ->get();
-
-        // 4. Transaksi Terbaru
-        $transaksiTerbaru = Transaksi::with(['user', 'details.produk'])
-            ->latest('tanggal_transaksi')
-            ->take(6)
-            ->get();
-
-        // 5. Tren 7 Hari Terakhir (Grafik Interaktif Animasi)
         $chartLabels = [];
         $chartOmzet = [];
         $chartPengeluaran = [];
-
+        $dailyStart = Carbon::today()->subDays(6)->startOfDay();
+        $dailyEnd = Carbon::today()->endOfDay();
+        $dailySales = (clone $sales)->whereBetween('tanggal_transaksi', [$dailyStart, $dailyEnd])->get(['tanggal_transaksi', 'total_harga'])
+            ->groupBy(fn ($row) => $row->tanggal_transaksi->format('Y-m-d'))->map(fn ($rows) => (float) $rows->sum('total_harga'));
+        $dailyOtherIncome = (clone $manualIncome)->whereBetween('tanggal_pemasukan', [$dailyStart, $dailyEnd])->get(['tanggal_pemasukan', 'nominal'])
+            ->groupBy(fn ($row) => $row->tanggal_pemasukan->format('Y-m-d'))->map(fn ($rows) => (float) $rows->sum('nominal'));
+        $dailyExpenses = (clone $expenses)->whereBetween('tanggal_pengeluaran', [$dailyStart, $dailyEnd])->get(['tanggal_pengeluaran', 'nominal'])
+            ->groupBy(fn ($row) => $row->tanggal_pengeluaran->format('Y-m-d'))->map(fn ($rows) => (float) $rows->sum('nominal'));
         for ($i = 6; $i >= 0; $i--) {
-            $loopDate = Carbon::today()->subDays($i);
-            $chartLabels[] = $loopDate->translatedFormat('d M');
-
-            $dailyOmzet = Transaksi::where('status_pembayaran', 'lunas')
-                ->whereDate('tanggal_transaksi', $loopDate)
-                ->sum('total_harga');
-            $chartOmzet[] = (int) $dailyOmzet;
-
-            $dailyExpense = Pengeluaran::whereDate('tanggal_pengeluaran', $loopDate)
-                ->sum('nominal');
-            $chartPengeluaran[] = (int) $dailyExpense;
+            $date = Carbon::today()->subDays($i);
+            $chartLabels[] = $date->format('d/m');
+            $key = $date->toDateString();
+            $chartOmzet[] = ($dailySales[$key] ?? 0) + ($dailyOtherIncome[$key] ?? 0);
+            $chartPengeluaran[] = $dailyExpenses[$key] ?? 0;
         }
 
-        // 6. Proporsi Metode Pembayaran (Grafik Donut Animasi)
-        $metodeTunai = Transaksi::where('status_pembayaran', 'lunas')
-            ->where('metode_pembayaran', 'tunai')
-            ->count();
-        $metodeQris = Transaksi::where('status_pembayaran', 'lunas')
-            ->where('metode_pembayaran', 'qris')
-            ->count();
-        $metodeTransfer = Transaksi::where('status_pembayaran', 'lunas')
-            ->where('metode_pembayaran', 'transfer')
-            ->count();
+        $namaBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $chartBulananLabels = $namaBulan;
+        $monthlySales = (clone $sales)->whereBetween('tanggal_transaksi', [$yearStart, $yearStart->copy()->endOfYear()])->get(['tanggal_transaksi', 'total_harga'])
+            ->groupBy(fn ($row) => $row->tanggal_transaksi->month)->map(fn ($rows) => (float) $rows->sum('total_harga'));
+        $monthlyOtherIncome = (clone $manualIncome)->whereBetween('tanggal_pemasukan', [$yearStart, $yearStart->copy()->endOfYear()])->get(['tanggal_pemasukan', 'nominal'])
+            ->groupBy(fn ($row) => $row->tanggal_pemasukan->month)->map(fn ($rows) => (float) $rows->sum('nominal'));
+        $monthlyExpenses = (clone $expenses)->whereBetween('tanggal_pengeluaran', [$yearStart, $yearStart->copy()->endOfYear()])->get(['tanggal_pengeluaran', 'nominal'])
+            ->groupBy(fn ($row) => $row->tanggal_pengeluaran->month)->map(fn ($rows) => (float) $rows->sum('nominal'));
+        $chartBulananPemasukan = $chartBulananPengeluaran = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $chartBulananPemasukan[] = ($monthlySales[$month] ?? 0) + ($monthlyOtherIncome[$month] ?? 0);
+            $chartBulananPengeluaran[] = $monthlyExpenses[$month] ?? 0;
+        }
 
-        // 7. Metrik Pendukung
-        $totalProduk = Produk::count();
-        $totalTransaksiLunas = Transaksi::where('status_pembayaran', 'lunas')->count();
+        $metodeTunai = (clone $sales)->where('metode_pembayaran', 'tunai')->count();
+        $metodeQris = (clone $sales)->where('metode_pembayaran', 'qris')->count();
+        $metodeTransfer = (clone $sales)->where('metode_pembayaran', 'transfer')->count();
+        $adaDataDemo = (clone $transactions)->where('is_demo', true)->exists()
+            || (clone $manualIncome)->where('is_demo', true)->exists()
+            || (clone $expenses)->where('is_demo', true)->exists();
 
         return view('dashboard', compact(
             'omzetHariIni',
@@ -85,11 +102,14 @@ class DashboardController extends Controller
             'omzetBulanIni',
             'pengeluaranBulanIni',
             'labaKotorBulanIni',
+            'totalPemasukan', 'pendapatanPenjualan', 'pendapatanLain', 'totalPengeluaran', 'saldoKeuangan',
+            'totalTransaksi', 'totalPending', 'aktivitasTerbaru', 'adaDataDemo',
             'stokMenipis',
             'transaksiTerbaru',
             'chartLabels',
             'chartOmzet',
             'chartPengeluaran',
+            'chartBulananLabels', 'chartBulananPemasukan', 'chartBulananPengeluaran',
             'metodeTunai',
             'metodeQris',
             'metodeTransfer',

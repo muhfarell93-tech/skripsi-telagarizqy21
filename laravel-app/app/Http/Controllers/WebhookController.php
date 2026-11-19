@@ -53,6 +53,16 @@ class WebhookController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Transaksi tidak ditemukan'], 404);
             }
 
+            if (abs($grossAmount - (float) $transaksi->total_harga) > 0.01) {
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'message' => 'Nominal notifikasi tidak sesuai dengan invoice'], 422);
+            }
+
+            if (!in_array($transactionStatus, ['capture', 'settlement', 'pending', 'deny', 'cancel', 'expire', 'refund'], true)) {
+                DB::rollBack();
+                return response()->json(['status' => 'error', 'message' => 'Status pembayaran tidak dikenal'], 422);
+            }
+
             // Replayed or delayed events must never downgrade a paid transaction.
             if ($transaksi->status_pembayaran === 'lunas') {
                 DB::rollBack();

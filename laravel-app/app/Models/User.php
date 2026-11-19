@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany(Pengeluaran::class, 'user_id');
     }
 
+    public function pemasukanManual()
+    {
+        return $this->hasMany(PemasukanManual::class, 'user_id');
+    }
+
     public function logAktivitas()
     {
         return $this->hasMany(LogAktivitas::class, 'user_id');

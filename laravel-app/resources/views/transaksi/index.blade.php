@@ -48,11 +48,29 @@
         <tbody class="divide-y divide-slate-100">
           @forelse($transaksis as $transaksi)
             <tr>
-              <td class="whitespace-nowrap px-4 py-3">{{ $transaksi->tanggal_transaksi->format('d/m/Y H:i') }}</td>
-              <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800">{{ $transaksi->kode_invoice }}</td>
-              <td class="px-4 py-3">{{ $transaksi->user->name ?? '—' }}</td>
-              <td class="px-4 py-3 uppercase">{{ $transaksi->metode_pembayaran }}</td>
-              <td class="whitespace-nowrap px-4 py-3 text-right font-semibold">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</td>
+              <td class="whitespace-nowrap px-4 py-3 text-slate-600 font-medium">{{ $transaksi->tanggal_transaksi->format('d/m/Y H:i') }}</td>
+              <td class="whitespace-nowrap px-4 py-3">
+                <div class="font-bold text-slate-900">{{ $transaksi->kode_invoice }} @if($transaksi->is_demo)<span class="badge text-bg-warning">DEMO</span>@endif</div>
+                @if($transaksi->catatan)
+                  <div class="text-[11px] font-semibold text-blue-600 flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-user text-[10px]"></i> {{ $transaksi->catatan }}
+                  </div>
+                @endif
+              </td>
+              <td class="px-4 py-3 text-slate-700 font-medium">{{ $transaksi->user->name ?? '—' }}</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1 uppercase font-bold text-xs px-2 py-0.5 rounded {{ $transaksi->metode_pembayaran === 'qris' ? 'bg-purple-100 text-purple-800' : ($transaksi->metode_pembayaran === 'transfer' ? 'bg-blue-100 text-blue-800' : 'bg-slate-100 text-slate-800') }}">
+                  @if($transaksi->metode_pembayaran === 'qris')
+                    <i class="fa-solid fa-qrcode text-[10px]"></i>
+                  @elseif($transaksi->metode_pembayaran === 'transfer')
+                    <i class="fa-solid fa-building-columns text-[10px]"></i>
+                  @else
+                    <i class="fa-solid fa-money-bill text-[10px]"></i>
+                  @endif
+                  {{ $transaksi->metode_pembayaran }}
+                </span>
+              </td>
+              <td class="whitespace-nowrap px-4 py-3 text-right font-black text-slate-900">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</td>
               <td class="px-4 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-bold {{ $transaksi->status_pembayaran === 'lunas' ? 'bg-emerald-50 text-emerald-700' : ($transaksi->status_pembayaran === 'batal' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }}">{{ str_replace('_', ' ', ucfirst($transaksi->status_pembayaran)) }}</span></td>
               <td class="whitespace-nowrap px-4 py-3"><a href="{{ route('transaksi.show', $transaksi) }}" class="font-semibold text-blue-700 hover:underline">Lihat nota</a></td>
             </tr>

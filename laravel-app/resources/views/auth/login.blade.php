@@ -115,6 +115,21 @@
           </div>
 
           <button class="submit" type="submit" id="submit-button">Masuk</button>
+
+          <!-- Shortcut Masuk Cepat Demo (Admin & Kasir) -->
+          <div style="margin-top: 18px; padding: 12px; border-radius: 12px; background: #f0f7fb; border: 1px dashed #b9d8e8; text-align: center;">
+            <div style="font-size: 11px; font-weight: 700; color: #1e5a75; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+              ⚡ Akses Cepat Demo (1-Klik Masuk)
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <a href="{{ route('demo.switch-role', 'admin') }}" style="flex: 1; padding: 8px 10px; background: #174e65; color: #fff; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700; display: inline-block;">
+                👑 Masuk Admin
+              </a>
+              <a href="{{ route('demo.switch-role', 'kasir') }}" style="flex: 1; padding: 8px 10px; background: #d97706; color: #fff; border-radius: 8px; text-decoration: none; font-size: 12px; font-weight: 700; display: inline-block;">
+                🛒 Masuk Kasir
+              </a>
+            </div>
+          </div>
         </form>
 
         <a class="register-link" href="{{ route('register') }}">Register</a>

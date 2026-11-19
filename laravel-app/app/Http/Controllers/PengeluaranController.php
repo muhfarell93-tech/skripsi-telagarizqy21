@@ -12,12 +12,18 @@ class PengeluaranController extends Controller
 {
     public function index()
     {
+        $outletId = Auth::user()->outlet_id ?? 1;
         $pengeluarans = Pengeluaran::with('user')
-            ->where('outlet_id', Auth::user()->outlet_id)
+            ->where('outlet_id', $outletId)
+            ->when(!app()->environment(['local', 'testing']), fn ($query) => $query->where('is_demo', false))
             ->latest('tanggal_pengeluaran')
             ->paginate(20);
 
-        return view('pengeluaran.index', compact('pengeluarans'));
+        $totalPengeluaran = Pengeluaran::where('outlet_id', $outletId)
+            ->when(!app()->environment(['local', 'testing']), fn ($query) => $query->where('is_demo', false))
+            ->sum('nominal');
+
+        return view('pengeluaran.index', compact('pengeluarans', 'totalPengeluaran'));
     }
 
     public function store(Request $request)

@@ -11,6 +11,8 @@ Pastikan komputer/laptop Anda telah terpasang:
 * **Composer:** Dependency Manager PHP (Tersedia di `C:\laragon\bin\composer`).
 * **Web Browser:** Google Chrome / Microsoft Edge.
 
+> Proyek yang tersedia saat ini memakai Laravel 10 dan berjalan pada PHP 8.1. Laravel 13 memerlukan PHP 8.3 atau lebih baru. Upgrade framework perlu dilakukan setelah runtime Laragon diperbarui; menaikkan dependency saja akan membuat aplikasi saat ini tidak dapat dijalankan.
+
 ---
 
 ## 2. Langkah Demi Langkah Setup & Instalasi
@@ -46,8 +48,9 @@ Pastikan komputer/laptop Anda telah terpasang:
 
 # Hanya dipakai untuk membuat akun demo saat APP_ENV=local/testing.
 # Isi dengan password minimal 4 karakter.
-SEED_ADMIN_PASSWORD=isi-password-unik-minimal-12-karakter
-SEED_CASHIER_PASSWORD=isi-password-unik-minimal-12-karakter
+SEED_ADMIN_PASSWORD=isi-password-unik-yang-kuat
+SEED_CASHIER_PASSWORD=isi-password-unik-yang-kuat
+DEMO_DATA_ENABLED=false
    ```
 
 4. Pasang dependency proyek dan buat application key:
@@ -60,14 +63,20 @@ SEED_CASHIER_PASSWORD=isi-password-unik-minimal-12-karakter
 
 ### Langkah 3: Eksekusi Migrasi & Data Awal (Seeder)
 
-Gunakan migration Laravel untuk mengisi struktur tabel dan seeder untuk data katalog produk:
+Gunakan migration Laravel untuk menambah atau memperbarui struktur database tanpa menghapus data yang sudah ada:
 
 #### Menggunakan Artisan Migration & Seeder
 Jalankan perintah berikut di terminal:
 ```powershell
-php artisan migrate:fresh --seed
+php artisan migrate
 ```
-*Perintah ini membuat tabel aplikasi Laravel dan data master. Gunakan migration untuk database aplikasi; file SQL di folder utama adalah artefak rancangan skema terdahulu dengan nama tabel berbeda.*
+Untuk database baru, buat akun demo serta katalog awal (isi `SEED_ADMIN_PASSWORD` dan `SEED_CASHIER_PASSWORD` terlebih dahulu), lalu jalankan:
+```powershell
+php artisan db:seed
+```
+Jangan gunakan `migrate:fresh` pada database yang berisi data, karena perintah itu menghapus tabel dan seluruh isinya. Migration juga menambahkan kolom penanda DEMO dan tabel pemasukan lain; data transaksi lama tetap dipertahankan dan tidak otomatis ditandai sebagai DEMO.
+
+Jika membutuhkan data demonstrasi untuk presentasi, pastikan `APP_ENV=local`, set `DEMO_DATA_ENABLED=true`, lalu jalankan `php artisan db:seed`. Semua baris ilustrasi ditandai DEMO; transaksi contoh hanya berstatus menunggu atau batal, tanpa pembayaran yang direkayasa menjadi lunas. Kembalikan nilainya ke `false` setelah demo selesai.
 
 ---
 
@@ -111,21 +120,22 @@ Di lingkungan lokal, `MAIL_MAILER=log` menulis tautan reset kata sandi ke log ap
 1. Pada menu POS, pilih varian produk susu yang dibeli.
 2. Pilih metode pembayaran: **Online (QRIS)**.
 3. Klik **Proses Transaksi**.
-4. Pop-up Snap Midtrans akan muncul di layar menampilkan **QRIS Dinamis** lengkap dengan hitung mundur (*timer*).
-5. Pembeli melakukan scan menggunakan aplikasi m-Banking atau E-Wallet (GoPay/ShopeePay/Dana).
-6. Saat pembayaran berhasil, sistem menerima callback webhook, otomatis memperbarui status transaksi menjadi **LUNAS**, mengurangi stok fisik susu kambing, dan menerbitkan struk resmi.
+4. Snap Midtrans akan dibuka jika kredensial Sandbox valid dan endpoint gateway dapat dijangkau. Transaksi tersimpan sebagai menunggu sampai ada pemberitahuan terverifikasi.
+5. Untuk pengujian, gunakan akun dan simulator Sandbox resmi Midtrans. Jangan menganggap tampilan QR atau respons browser sebagai bukti pembayaran.
+6. Webhook Midtrans memvalidasi signature dan nominal sebelum transaksi menjadi **LUNAS** dan stok dikurangi. Tanpa webhook valid, transaksi tetap menunggu/batal dan tidak masuk sebagai pemasukan.
 
 ---
 
-## 5. Pengujian Webhook di Lingkungan Lokal (*Localhost*)
+## 5. Webhook di Lingkungan Lokal (*Localhost*)
 
-Ketika menguji di komputer lokal tanpa IP publik:
-1. Gunakan simulator interaktif yang telah kami sediakan di:  
-   [simulator_pembayaran_online.html](file:///c:/Users/advan/Documents/Skripsi%20kating/simulator_pembayaran_online.html)
-2. Klik tombol **"Simulasikan Pembayaran Berhasil (Trigger Webhook)"** untuk menguji perubahan status seketika, verifikasi signature SHA-512, dan pencetakan bukti bayar digital.
-3. Untuk pengujian langsung dari server Midtrans ke localhost, gunakan tool tunneling seperti **ngrok**:
+Midtrans tidak dapat mengirim webhook ke `localhost` secara langsung. Untuk pengujian integrasi nyata, gunakan kredensial Sandbox dan tunnel HTTPS yang Anda kendalikan:
+1. Jalankan tunnel ke server Laravel, misalnya:
    ```powershell
    ngrok http 8000
    ```
-   Lalu daftarkan URL ngrok Anda pada dashboard Midtrans: `https://xxxx.ngrok-free.app/webhook/midtrans`.
+2. Daftarkan URL callback `https://<domain-tunnel-anda>/webhook/midtrans` di konfigurasi Sandbox Midtrans.
+3. Pastikan `.env` berisi Server Key Sandbox dan Client Key Sandbox yang cocok, lalu bersihkan cache konfigurasi (`php artisan config:clear`). Jangan membagikan kunci tersebut.
+4. Uji notifikasi melalui alur Sandbox resmi. Endpoint webhook menolak notifikasi dengan signature atau nominal yang tidak cocok; jangan mengubah status menjadi lunas secara manual untuk menguji pembayaran.
+
+Tes otomatis aplikasi memakai gateway palsu terkontrol untuk memastikan alur pending dan validasi. Tes tersebut bukan bukti bahwa akun Midtrans atau webhook publik telah terhubung. Koneksi Sandbox eksternal memerlukan kredensial dan konfigurasi callback milik operator.
 

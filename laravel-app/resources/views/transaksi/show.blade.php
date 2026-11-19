@@ -13,7 +13,7 @@
 </style>
 @if($transaksi->status_pembayaran === 'belum_lunas' && $transaksi->snap_token)
 <script type="text/javascript"
-  src="https://app.sandbox.midtrans.com/snap/snap.js"
+  src="{{ config('midtrans.snap_url') }}"
   data-client-key="{{ config('midtrans.client_key') }}"></script>
 @endif
 @endpush
@@ -30,9 +30,11 @@
       <button onclick="window.print()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
         <i class="fa-solid fa-print"></i> Cetak Struk (Thermal / PDF)
       </button>
-      <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition">
-        Dashboard
-      </a>
+      @if(auth()->user()->role === 'admin')
+        <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition">Dashboard</a>
+      @else
+        <a href="{{ route('transaksi.index') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition">Riwayat</a>
+      @endif
     </div>
   </div>
 
@@ -42,7 +44,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
       <div>
         <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest block">Faktur Penjualan</span>
-        <h2 class="text-xl font-black text-slate-900">{{ $transaksi->kode_invoice }}</h2>
+        <h2 class="text-xl font-black text-slate-900">{{ $transaksi->kode_invoice }} @if($transaksi->is_demo)<span class="badge text-bg-warning">DEMO</span>@endif</h2>
         <p class="text-xs text-slate-500 mt-0.5">Waktu: {{ $transaksi->tanggal_transaksi->format('d/m/Y H:i') }} WIB</p>
       </div>
 
@@ -66,11 +68,9 @@
               <button type="button" onclick="checkStatusManual()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-300 btn-interactive flex items-center gap-1">
                 <i class="fa-solid fa-rotate"></i> Cek Server
               </button>
-              <button type="button" onclick="simulateLunas()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-[11px] font-bold rounded-xl border border-emerald-200 flex items-center gap-1">
-                <i class="fa-solid fa-flask"></i> Uji Coba Lunas (Sandbox)
-              </button>
             </div>
-            <p class="text-[10px] text-slate-400">Sistem memantau konfirmasi valid server secara real-time...</p>
+            <p class="text-[10px] text-slate-400">Status lunas hanya berubah setelah notifikasi Midtrans berhasil diverifikasi server.</p>
+            @if($transaksi->waktu_kadaluarsa)<p class="text-[10px] text-slate-500">Batas waktu: {{ $transaksi->waktu_kadaluarsa->format('d/m/Y H:i') }} WIB</p>@endif
           </div>
         @else
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-red-100 text-red-800 border border-red-200">
@@ -94,6 +94,12 @@
         <span class="text-slate-400 block text-[10px] uppercase font-bold">Metode Pembayaran</span>
         <span class="font-bold text-slate-800 uppercase">{{ $transaksi->metode_pembayaran }}</span>
       </div>
+      @if($transaksi->catatan)
+        <div class="sm:col-span-3 border-t border-slate-200/60 pt-2 flex items-center gap-1.5 text-blue-800 font-semibold">
+          <i class="fa-solid fa-user-tag text-blue-600"></i>
+          <span>Pelanggan / Catatan: <strong>{{ $transaksi->catatan }}</strong></span>
+        </div>
+      @endif
     </div>
 
     <!-- Tabel Rincian Item Barang -->
@@ -157,6 +163,9 @@
 
   <div class="py-2.5 space-y-1 border-b border-dashed border-slate-400 text-[11px]">
     <div class="flex justify-between"><span>No. Faktur:</span><span class="font-bold">{{ $transaksi->kode_invoice }}</span></div>
+    @if($transaksi->catatan)
+      <div class="flex justify-between"><span>Pelanggan:</span><span class="font-bold text-slate-800">{{ $transaksi->catatan }}</span></div>
+    @endif
     <div class="flex justify-between"><span>Waktu:</span><span>{{ $transaksi->tanggal_transaksi->format('d/m/Y H:i') }}</span></div>
     <div class="flex justify-between"><span>Kasir:</span><span>{{ $transaksi->user->name ?? 'Kasir' }}</span></div>
     <div class="flex justify-between"><span>Metode:</span><span class="font-bold uppercase">{{ $transaksi->metode_pembayaran }}</span></div>
@@ -184,7 +193,7 @@
   <div class="text-center pt-4 space-y-1 text-[10px] text-slate-600 border-t border-dashed border-slate-400">
     <div class="font-bold">Terima Kasih Atas Kunjungan Anda</div>
     <div>Susu Kambing Alami &amp; Sehat Bergizi</div>
-    <div class="text-[9px] text-slate-400 pt-1">Simpan struk ini sebagai bukti pembayaran sah.</div>
+    <div class="text-[9px] text-slate-400 pt-1">{{ $transaksi->status_pembayaran === 'lunas' ? 'Simpan struk ini sebagai bukti pembayaran.' : 'Dokumen ini bukan bukti bahwa pembayaran telah diterima.' }}</div>
   </div>
 </div>
 @endsection
@@ -209,23 +218,6 @@
     })
     .catch(() => {
       window.showToast("Gagal Cek", "Tidak dapat menghubungi server.", "error");
-    });
-  }
-
-  function simulateLunas() {
-    fetch(`/transaksi/${txId}/simulasi-lunas`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": "{{ csrf_token() }}",
-        "Accept": "application/json"
-      }
-    })
-    .then(r => r.json())
-    .then(res => {
-      if (res.success) {
-        checkStatusManual();
-      }
     });
   }
 

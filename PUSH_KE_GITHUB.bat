@@ -1,5 +1,5 @@
 @echo off
-title Push Skripsi Telaga Rizqy 21 ke GitHub
+title Push Laporan & Aplikasi Telaga Rizqy 21 ke GitHub
 cd /d "%~dp0"
 
 echo ===================================================================
@@ -7,11 +7,12 @@ echo   SISTEM INFORMASI TRANSAKSI KEUANGAN TELAGA RIZQY 21
 echo   Mengunggah Repository ke GitHub: muhfarell93-tech/skripsi-telagarizqy21
 echo ===================================================================
 echo.
-echo Menghubungkan ke GitHub...
-echo Jika muncul jendela browser / Git Credential, silakan klik 'Sign in with your browser'.
+echo Menambahkan berkas ke Git...
+git add .
+git commit -m "docs: perbarui README.md laporan akhir Telaga Rizqy 21 (M. Fahrul Rajab Firdaus - 24430011)"
 echo.
-
-"C:\laragon\bin\git\bin\git.exe" push -u origin main
+echo Mengunggah ke GitHub...
+git push -u origin main
 
 echo.
 if %ERRORLEVEL% EQU 0 (

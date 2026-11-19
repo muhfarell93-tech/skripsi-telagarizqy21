@@ -20,6 +20,7 @@ class TransaksiController extends Controller
 
         $query = Transaksi::with('user')
             ->where('outlet_id', Auth::user()->outlet_id)
+            ->when(!app()->environment(['local', 'testing']), fn ($builder) => $builder->where('is_demo', false))
             ->when(Auth::user()->role === 'kasir', fn ($builder) => $builder->where('user_id', Auth::id()))
             ->when($filters['q'] ?? null, fn ($builder, $term) => $builder->where('kode_invoice', 'like', '%'.$term.'%'))
             ->when($filters['status'] ?? null, fn ($builder, $status) => $builder->where('status_pembayaran', $status))
