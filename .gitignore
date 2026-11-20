@@ -22,4 +22,5 @@ laravel-app/.phpunit.result.cache
 Thumbs.db
 Desktop.ini
 *.log
+cloudflared.exe
 

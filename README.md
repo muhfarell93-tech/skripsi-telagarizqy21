@@ -205,7 +205,32 @@ Pengujian fungsionalitas menggunakan metode *Blackbox Testing* menunjukkan selur
 
 ---
 
-## ☁️ V. PANDUAN HOSTING ONLINE DI VERCEL (AKSES PUBLIK GRATIS)
+## 🌐 V. HOSTING OTOMATIS CLOUDFLARE (LIVE DATABASE & .ENV 100% OTOMATIS)
+
+Sistem ini telah dilengkapi fitur **Hosting Otomatis Cloudflare (Cloudflare Tunnel)** yang menghubungkan aplikasi web, database MySQL (`telagarizqy21_db`), serta seluruh konfigurasi `.env` ke jaringan global Cloudflare dengan enkripsi resmi **HTTPS**. Fitur ini berjalan **100% otomatis tanpa konfigurasi manual**, sehingga dapat langsung dibuka oleh dosen penguji atau publik dari mana saja di seluruh dunia.
+
+### 🔗 Tautan Publik Cloudflare (Live):
+👉 **[https://substitute-donor-they-poet.trycloudflare.com](https://substitute-donor-they-poet.trycloudflare.com)**  
+*(Dapat langsung diakses dari browser HP, tablet, atau laptop manapun di seluruh dunia).*
+
+### ⚡ Cara Mengaktifkan Hosting Cloudflare (1-Klik Tanpa Manual):
+1. Buka folder proyek ini di Windows Explorer: `c:\Users\advan\Documents\Skripsi kating\`
+2. Klik ganda (*double click*) berkas:
+   👉 **`HOSTING_CLOUDFLARE_OTOMATIS.bat`**
+3. Sistem secara otomatis:
+   * Mengaktifkan server web lokal port 8000.
+   * Mengaktifkan *terowongan jaringan* Cloudflare (`cloudflared`).
+   * Menghubungkan database MySQL `telagarizqy21_db` dan file `.env` secara langsung.
+   * Menampilkan link publik Cloudflare aktif yang siap dibagikan.
+
+### 💾 Berkas Migrasi Database & File ENV Otomatis:
+Jika Anda ingin memindahkan database ke server hosting MySQL lainnya di kemudian hari, berkas berikut sudah otomatis diekspor:
+* **Database Dump Siap Pakai (13 Tabel Lengkap):** [`database_telagarizqy21_live_dump.sql`](file:///c:/Users/advan/Documents/Skripsi%20kating/database_telagarizqy21_live_dump.sql)
+* **Konfigurasi Environment Produksi:** [`.env.production`](file:///c:/Users/advan/Documents/Skripsi%20kating/laravel-app/.env.production)
+
+---
+
+## ☁️ VI. PANDUAN HOSTING ALTERNATIF DI VERCEL
 
 Aplikasi ini telah dikonfigurasi penuh dengan berkas `vercel.json` dan bridge serverless `api/index.php` sehingga dapat di-deploy ke **Vercel** secara gratis agar bisa diakses oleh dosen penguji atau publik dari mana saja tanpa perlu menyalakan komputer lokal:
 
@@ -237,7 +262,7 @@ Aplikasi ini telah dikonfigurasi penuh dengan berkas `vercel.json` dan bridge se
 
 ---
 
-## 📱 VI. CARA MEMASANG SEPERTI APK DI ANDROID & DESKTOP (PWA)
+## 📱 VII. CARA MEMASANG SEPERTI APK DI ANDROID & DESKTOP (PWA)
 
 Sistem ini telah mendukung standar **Progressive Web App (PWA)** dengan berkas `manifest.json` dan `sw.js` (Service Worker). Pengguna dapat memasang sistem ini langsung menjadi **aplikasi standalone di HP Android (berfungsi layaknya file APK)**:
 
@@ -254,7 +279,7 @@ Sistem ini telah mendukung standar **Progressive Web App (PWA)** dengan berkas `
 
 ---
 
-## ⚡ VII. CARA MENJALANKAN STANDALONE TANPA MEMBUKA LARAGON & ANTIGRAVITY
+## ⚡ VIII. CARA MENJALANKAN STANDALONE TANPA MEMBUKA LARAGON & ANTIGRAVITY
 
 Bagi dosen penguji atau rekan yang mengunduh berkas proyek ini di laptop Windows dan **tidak ingin repot membuka Laragon maupun Antigravity**, cukup gunakan pintasan otomatis berikut:
 
@@ -266,7 +291,7 @@ Bagi dosen penguji atau rekan yang mengunduh berkas proyek ini di laptop Windows
 
 ---
 
-## 🚀 VIII. PANDUAN MENJALANKAN APLIKASI SECARA MANUAL (LOCAL SETUP)
+## 🚀 IX. PANDUAN MENJALANKAN APLIKASI SECARA MANUAL (LOCAL SETUP)
 
 ### Prasyarat Sistem:
 * **Web Server & PHP:** Laragon / XAMPP (PHP versi 8.1 atau lebih baru)
