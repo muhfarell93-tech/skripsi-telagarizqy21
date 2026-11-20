@@ -1,39 +1,38 @@
 @echo off
-title Menjalankan Web Telaga Rizqy 21 (Laravel + POS)
-color 0b
+title Telaga Rizqy 21 - Standalone POS Launcher
+cd /d "%~dp0"
 
-echo ========================================================
-echo    MENJALANKAN SISTEM INFORMASI TRANSAKSI KEUANGAN
-echo                 TELAGA RIZQY 21 METRO
-echo ========================================================
+echo ===================================================================
+echo   TELAGA RIZQY 21 - SISTEM INFORMASI TRANSAKSI KEUANGAN & POS
+echo   Menjalankan Aplikasi secara Mandiri (Tanpa Laragon & Antigravity)
+echo ===================================================================
 echo.
 
-:: Tambahkan PHP Laragon ke PATH sementara
-set "PATH=C:\laragon\bin\php\php-8.1.10-Win32-vs16-x64;%PATH%"
-
-cd /d "%~dp0laravel-app"
-
-echo [1/3] Memeriksa file konfigurasi (.env)...
-if not exist ".env" (
-    echo Menyalin .env dari .env.example...
-    copy .env.example .env
-    php artisan key:generate
+set "PHP_EXE=C:\laragon\bin\php\php-8.1.10-Win32-vs16-x64\php.exe"
+if not exist "%PHP_EXE%" (
+    where php >nul 2>nul
+    if %ERRORLEVEL% EQU 0 (
+        set "PHP_EXE=php"
+    ) else (
+        echo [ERROR] PHP tidak ditemukan di sistem.
+        pause
+        exit /b 1
+    )
 )
 
-echo [2/3] Membuka browser ke http://localhost:8000/login...
-start http://localhost:8000/login
+echo [1/3] Menyiapkan server lokal port 8000...
+start /b "" "%PHP_EXE%" "laravel-app\artisan" serve --host=127.0.0.1 --port=8000 >nul 2>&1
 
-echo [3/3] Server web sedang berjalan di http://127.0.0.1:8000
+echo [2/3] Menunggu server aktif...
+timeout /t 2 /nobreak >nul
+
+echo [3/3] Membuka aplikasi di browser (Kasir POS)...
+start http://localhost:8000/pos
+
 echo.
-echo ========================================================
-echo PENTING:
-echo 1. Jangan tutup jendela terminal hitam ini selama memakai web.
-echo 2. Pastikan Anda sudah klik "Start All" di Laragon agar
-echo    database MySQL aktif.
-echo ========================================================
+echo ===================================================================
+echo   APLIKASI SEDANG BERJALAN PADA: http://localhost:8000
+echo   Untuk menutup aplikasi, cukup tutup jendela konsol ini.
+echo ===================================================================
 echo.
-
-php artisan serve --port=8000
-
 pause
-

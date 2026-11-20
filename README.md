@@ -205,7 +205,68 @@ Pengujian fungsionalitas menggunakan metode *Blackbox Testing* menunjukkan selur
 
 ---
 
-## 🚀 V. PANDUAN MENJALANKAN APLIKASI (LOCAL SETUP)
+## ☁️ V. PANDUAN HOSTING ONLINE DI VERCEL (AKSES PUBLIK GRATIS)
+
+Aplikasi ini telah dikonfigurasi penuh dengan berkas `vercel.json` dan bridge serverless `api/index.php` sehingga dapat di-deploy ke **Vercel** secara gratis agar bisa diakses oleh dosen penguji atau publik dari mana saja tanpa perlu menyalakan komputer lokal:
+
+### Langkah-Langkah Deploy ke Vercel:
+1. **Buka Vercel:** Kunjungi [https://vercel.com](https://vercel.com) dan login menggunakan akun GitHub Anda (`muhfarell93-tech`).
+2. **Impor Proyek:**
+   * Klik tombol **"Add New..."** ➔ **"Project"**.
+   * Cari dan pilih repositori: `muhfarell93-tech/skripsi-telagarizqy21`.
+   * Klik **"Import"**.
+3. **Konfigurasi Environment Variables:**
+   Pada menu dropdown **Environment Variables**, tambahkan variabel berikut:
+   | Key | Value (Contoh) | Keterangan |
+   | :--- | :--- | :--- |
+   | `APP_NAME` | `Telaga Rizqy 21` | Nama aplikasi |
+   | `APP_ENV` | `production` | Lingkungan produksi |
+   | `APP_KEY` | `base64:lE/MLHM/eCfkYWc85mmmj52k3og9nDhrozm8F57uF0M=` | Kunci enkripsi Laravel |
+   | `APP_DEBUG` | `false` | Mode produksi aman |
+   | `APP_URL` | `https://skripsi-telagarizqy21.vercel.app` | URL domain Vercel Anda |
+   | `DB_CONNECTION`| `mysql` | Tipe basis data |
+   | `DB_HOST` | *(Host Cloud Database)* | Contoh: dari TiDB Serverless / Aiven / Railway |
+   | `DB_PORT` | `3306` | Port database MySQL |
+   | `DB_DATABASE`| `telagarizqy21_db` | Nama database cloud |
+   | `DB_USERNAME`| *(User Database Cloud)* | Username cloud database |
+   | `DB_PASSWORD`| *(Password Database Cloud)* | Kata sandi database cloud |
+
+4. **Deploy:** Klik tombol **"Deploy"**. Dalam 1-2 menit, aplikasi Anda sudah live dengan URL publik HTTPS yang dapat dibuka di seluruh dunia!
+
+> **Tips Cloud Database Gratis:** Anda dapat membuat database MySQL online gratis seumur hidup di platform seperti **TiDB Cloud (Serverless MySQL)**, **Aiven.io**, atau **Railway.app** lalu mengimpor berkas `database_telaga_rizqy21_fixed.sql`.
+
+---
+
+## 📱 VI. CARA MEMASANG SEPERTI APK DI ANDROID & DESKTOP (PWA)
+
+Sistem ini telah mendukung standar **Progressive Web App (PWA)** dengan berkas `manifest.json` dan `sw.js` (Service Worker). Pengguna dapat memasang sistem ini langsung menjadi **aplikasi standalone di HP Android (berfungsi layaknya file APK)**:
+
+### 1. Pemasangan di HP Android (Google Chrome):
+1. Buka tautan web sistem di browser Google Chrome pada smartphone Anda.
+2. Ketuk ikon titik tiga (⋮) di pojok kanan atas browser.
+3. Pilih opsi **"Tambahkan ke Layar Utama"** (*Add to Home screen*) atau **"Instal Aplikasi"**.
+4. Ikon aplikasi **Telaga Rizqy 21** akan otomatis muncul di layar HP layaknya aplikasi APK native tanpa bilah alamat browser (*full-screen app*).
+
+### 2. Pemasangan di Komputer / Laptop (Windows):
+1. Buka tautan web di browser Chrome atau Microsoft Edge.
+2. Klik ikon monitor kecil bertanda panah (**"Install App"**) pada sisi kanan bilah alamat (URL bar).
+3. Aplikasi akan terpasang di Desktop Windows dan dapat dibuka sebagai jendela aplikasi terpisah.
+
+---
+
+## ⚡ VII. CARA MENJALANKAN STANDALONE TANPA MEMBUKA LARAGON & ANTIGRAVITY
+
+Bagi dosen penguji atau rekan yang mengunduh berkas proyek ini di laptop Windows dan **tidak ingin repot membuka Laragon maupun Antigravity**, cukup gunakan pintasan otomatis berikut:
+
+1. Buka folder proyek ini di Windows Explorer: `c:\Users\advan\Documents\Skripsi kating\`
+2. Klik ganda (*double click*) file:
+   👉 **`JALANKAN_APLIKASI.bat`**
+3. Server lokal dan browser kasir POS akan terbuka secara otomatis dalam 2 detik:
+   * **URL:** `http://localhost:8000/pos`
+
+---
+
+## 🚀 VIII. PANDUAN MENJALANKAN APLIKASI SECARA MANUAL (LOCAL SETUP)
 
 ### Prasyarat Sistem:
 * **Web Server & PHP:** Laragon / XAMPP (PHP versi 8.1 atau lebih baru)

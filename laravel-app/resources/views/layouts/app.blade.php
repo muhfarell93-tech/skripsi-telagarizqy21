@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'Sistem Pengolahan Data Transaksi Keuangan Berbasis Web') - Telaga Rizqy 21</title>
+
+  <!-- Progressive Web App (PWA - Berfungsi seperti APK di Android & Desktop) -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Telaga Rizqy 21">
+  <link rel="apple-touch-icon" href="/images/products/susu_murni.svg">
   <!-- Bootstrap 5, existing Tailwind utilities, icons, and Chart.js -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -979,6 +988,12 @@
       document.addEventListener('DOMContentLoaded', animateCounters);
     } else {
       animateCounters();
+    }
+    // PWA Service Worker Registration (APK Mode)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').catch(function() {});
+      });
     }
   </script>
 

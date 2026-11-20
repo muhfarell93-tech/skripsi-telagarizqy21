@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Masuk · Sistem Pengolahan Data Transaksi Keuangan Berbasis Web pada Telaga Rizqy 21</title>
+  <!-- PWA Manifest (APK Standalone Mode) -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#174e65">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Telaga Rizqy 21">
+  <link rel="apple-touch-icon" href="/images/products/susu_murni.svg">
   <style>
     :root { color-scheme: light; --ink:#17334a; --muted:#617789; --line:#dce6e9; --paper:#fff; --canvas:#eff5f5; --blue:#176b83; --blue-dark:#105365; --green:#85c6a3; --error:#a33131; }
     * { box-sizing:border-box; }

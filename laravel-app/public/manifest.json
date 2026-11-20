@@ -1,0 +1,19 @@
+{
+  "name": "Telaga Rizqy 21 - Sistem Informasi POS & Keuangan",
+  "short_name": "Telaga Rizqy 21",
+  "description": "Sistem Informasi Pengolahan Data Transaksi Keuangan dan Kasir POS Olahan Susu Kambing Telaga Rizqy 21",
+  "start_url": "/pos",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/images/products/susu_murni.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
